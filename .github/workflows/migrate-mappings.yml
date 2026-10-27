@@ -1,0 +1,58 @@
+# One-shot helper: converts the 1.21.4 Fabric sources (Yarn names) of foredayner/McTestBuilder
+# to Mojang's official names and pushes the result to the "migrated-src" branch.
+name: migrate-mappings
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: foredayner/McTestBuilder
+          path: old
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Put every source set in main so one classpath sees client + server classes
+        working-directory: old
+        run: |
+          set -x
+          for s in client gametest test; do
+            cp -r src/$s/java/. src/main/java/ || true
+          done
+          python3 - <<'PY'
+          import re, pathlib
+          p = pathlib.Path("build.gradle"); t = p.read_text()
+          t = t.replace("splitEnvironmentSourceSets()", "")
+          t = re.sub(r"sourceSets \{.*?\n\}\n", "", t, count=1, flags=re.S)
+          t = re.sub(r"loom \{\s*mods \{.*?\n\}\n", "", t, count=1, flags=re.S)
+          t = t.replace('testImplementation platform("org.junit:junit-bom:5.11.4")', 'implementation platform("org.junit:junit-bom:5.11.4")')
+          t = t.replace('testImplementation "org.junit.jupiter:junit-jupiter"', 'implementation "org.junit.jupiter:junit-jupiter"')
+          t = t.replace('testImplementation "net.fabricmc:fabric-loader-junit', 'implementation "net.fabricmc:fabric-loader-junit')
+          p.write_text(t)
+          PY
+          cat build.gradle
+      - name: Migrate to official names
+        working-directory: old
+        run: |
+          chmod +x gradlew
+          set -o pipefail
+          ./gradlew migrateMappings --mappings "net.minecraft:mappings:1.21.4" --input src/main/java --output ../mojmap 2>&1 | tee ../migrate.log
+      - name: Push result to migrated-src
+        if: always()
+        run: |
+          out=$(mktemp -d)
+          cp -r mojmap "$out/java" 2>/dev/null || true
+          cp migrate.log "$out/" 2>/dev/null || true
+          cd "$out"
+          git init -q && git checkout -q -b migrated-src && git add -A
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "Mojmap sources from McTestBuilder"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" migrated-src

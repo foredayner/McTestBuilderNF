@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "aibuildassistantnf:item/object",
+    "model": {
+      "type": "aibuildassistantnf:object_icon"
+    }
+  }
+}

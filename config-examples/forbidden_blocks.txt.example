@@ -1,0 +1,3 @@
+# Forbidden block IDs (one per line). Lines starting with # are ignored.
+minecraft:bedrock
+minecraft:barrier

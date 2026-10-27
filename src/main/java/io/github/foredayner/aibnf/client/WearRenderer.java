@@ -1,0 +1,64 @@
+package io.github.foredayner.aibnf.client;
+
+import io.github.foredayner.aibnf.content.AibContent;
+import io.github.foredayner.aibnf.content.GearKind;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Draws worn AI equipment (helmets, hats, armour, back items) on players, zombies, armour stands
+ * and other biped models, attached to the head or the torso so it follows their movement.
+ *
+ * <p>The AI designs with +Y up; entity models have +Y down, so the model is flipped on Y (which
+ * also turns its faces inside out, hence a no-cull layer).
+ */
+public final class WearRenderer implements ArmorRenderer {
+
+    private WearRenderer() {
+    }
+
+    public static void register() {
+        List<Item> worn = new ArrayList<>();
+        for (GearKind kind : GearKind.values()) {
+            if (kind.worn()) {
+                worn.add(AibContent.GEAR.get(kind));
+            }
+        }
+        ArmorRenderer.register(new WearRenderer(), worn.toArray(new Item[0]));
+    }
+
+    @Override
+    public void render(PoseStack matrices, MultiBufferSource vertexConsumers, ItemStack stack, HumanoidRenderState state,
+                       EquipmentSlot slot, int light, HumanoidModel<HumanoidRenderState> contextModel) {
+        if (!(stack.getItem() instanceof io.github.foredayner.aibnf.content.GearItem gear) || gear.kind().slot != slot) {
+            return;
+        }
+        GearModelRenderer.Model model = GearModelRenderer.modelFor(stack);
+        if (model == null || model.parts().isEmpty()) {
+            return;
+        }
+        ModelPart bone = slot == EquipmentSlot.HEAD ? contextModel.head : contextModel.body;
+        if (!bone.visible) {
+            return;
+        }
+        matrices.pushPose();
+        bone.translateAndRotate(matrices);
+        matrices.scale(1.0F, -1.0F, 1.0F);
+        GearModelRenderer.draw(matrices, vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(TextureAtlas.LOCATION_BLOCKS)),
+            model, light, OverlayTexture.NO_OVERLAY);
+        GearModelRenderer.drawAura(matrices, vertexConsumers, model, OverlayTexture.NO_OVERLAY);
+        matrices.popPose();
+    }
+}

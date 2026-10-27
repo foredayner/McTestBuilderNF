@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8", "refmap": "aibuildassistantnf.refmap.json",
+  "package": "io.github.foredayner.aibnf.mixin.client",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "BipedEntityModelMixin",
+    "BipedEntityRenderStateMixin",
+    "EntityRendererMixin",
+    "HeldItemRendererMixin",
+    "LivingEntityRendererMixin",
+    "MinecraftClientMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

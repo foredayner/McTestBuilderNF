@@ -1,0 +1,21 @@
+{
+  "key.aibuildassistantnf.open_ai_ui": "AI 건축 공방 열기",
+  "key.categories.aibuildassistantnf": "AI 건축 도우미",
+  "key.aibuildassistantnf.remove_object": "AI 소품 지우기 (조준 후 두 번)",
+  "item.aibuildassistantnf.object": "AI 소품",
+  "entity.aibuildassistantnf.hitbox": "AI 소품 충돌 상자",
+  "item.aibuildassistantnf.gear_sword": "AI 검",
+  "item.aibuildassistantnf.gear_axe": "AI 도끼",
+  "item.aibuildassistantnf.gear_pickaxe": "AI 곡괭이",
+  "item.aibuildassistantnf.gear_shovel": "AI 삽",
+  "item.aibuildassistantnf.gear_hoe": "AI 괭이",
+  "item.aibuildassistantnf.gear_spear": "AI 창",
+  "item.aibuildassistantnf.gear_hammer": "AI 망치",
+  "item.aibuildassistantnf.gear_staff": "AI 지팡이",
+  "item.aibuildassistantnf.gear_bow": "AI 활",
+  "entity.aibuildassistantnf.arrow": "AI 화살",
+  "item.aibuildassistantnf.gear_helmet": "AI 투구",
+  "item.aibuildassistantnf.gear_hat": "AI 모자",
+  "item.aibuildassistantnf.gear_chestplate": "AI 갑옷",
+  "item.aibuildassistantnf.gear_back": "AI 등 장식"
+}

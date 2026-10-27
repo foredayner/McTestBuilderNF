@@ -1,0 +1,14 @@
+{
+  "provider": "OLLAMA",
+  "modelName": "llama3.2",
+  "apiUrl": "http://localhost:11434",
+  "apiKey": "",
+  "ticksPerBlock": 2,
+  "forbiddenBlocksPath": "config/ai_builder/forbidden_blocks.txt",
+  "forbiddenBlocks": [
+    "minecraft:barrier",
+    "minecraft:bedrock"
+  ],
+  "debugLogEnabled": false,
+  "openAiWebSearchEnabled": false
+}

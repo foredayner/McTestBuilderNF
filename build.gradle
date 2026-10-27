@@ -46,6 +46,9 @@ legacyForge {
             sourceSet sourceSets.main
         }
     }
+
+    // Unit tests load Minecraft's registries (block names, block states) without starting a game.
+    addModdingDependenciesTo sourceSets.test
 }
 
 mixin {

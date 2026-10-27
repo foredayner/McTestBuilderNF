@@ -1,0 +1,211 @@
+[27Oct2026 14:08:40.795] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgegametestserveruserdev, --gameDir, ., --fml.forgeVersion, 47.4.0, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --mixin.config, aibuildassistantnf.mixins.json]
+[27Oct2026 14:08:40.800] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.10+10.0.10+main.22f00f84 starting: java version 17.0.20.1 by Eclipse Adoptium; OS Linux arch amd64 version 6.8.0-1064-azure
+[27Oct2026 14:08:40.889] [main/WARN] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Configuration file /home/runner/work/McTestBuilderNF/McTestBuilderNF/run/config/fml.toml is not correct. Correcting
+[27Oct2026 14:08:40.891] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSkipGLVersions] was corrected from null to []
+[27Oct2026 14:08:40.892] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowLogHelpMessage] was corrected from null to true
+[27Oct2026 14:08:40.892] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSquir] was corrected from null to false
+[27Oct2026 14:08:40.893] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowShowCPU] was corrected from null to false
+[27Oct2026 14:08:40.907] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgegametestserveruserdev
+[27Oct2026 14:08:40.954] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23145!/ Service=ModLauncher Env=SERVER
+[27Oct2026 14:08:41.161] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.4.0/235975dafa4309945b59c56b53f31dc5b65a6051/fmlcore-1.20.1-47.4.0.jar is missing mods.toml file
+[27Oct2026 14:08:41.163] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.4.0/f0c0b352173d0a378cbdcec9cfc4ba65899a721/javafmllanguage-1.20.1-47.4.0.jar is missing mods.toml file
+[27Oct2026 14:08:41.164] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.4.0/e862740d8c84d08dbfedea412bef88fe42e727c5/lowcodelanguage-1.20.1-47.4.0.jar is missing mods.toml file
+[27Oct2026 14:08:41.165] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.4.0/5719b3a297a33f877ed5dde4cb4bd75c859096af/mclanguage-1.20.1-47.4.0.jar is missing mods.toml file
+[27Oct2026 14:08:41.264] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[27Oct2026 14:08:43.317] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
+[27Oct2026 14:08:43.318] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgegametestserveruserdev' with arguments [--gameDir, .]
+[27Oct2026 14:08:43.355] [main/WARN] [mixin/]: Reference map 'aibuildassistantnf.refmap.json' for aibuildassistantnf.mixins.json could not be read. If this is a development environment you can ignore this message
+[27Oct2026 14:08:49.023] [modloading-worker-0/INFO] [aibuildassistantnf/]: Minecraft AI Build Assistant starting...
+[27Oct2026 14:08:49.036] [modloading-worker-0/INFO] [aibuildassistantnf/]: Loaded 2 forbidden block(s)
+[27Oct2026 14:08:49.037] [modloading-worker-0/INFO] [aibuildassistantnf/]: Loaded 2 forbidden block(s)
+[27Oct2026 14:08:49.049] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.4.0, for MC 1.20.1 with MCP 20230612.114412
+[27Oct2026 14:08:49.055] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.4.0 Initialized
+[27Oct2026 14:08:49.636] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[27Oct2026 14:08:50.203] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: OUTDATED Current: 47.4.0 Target: 47.4.28
+[27Oct2026 14:08:50.652] [main/ERROR] [net.minecraft.server.dedicated.Settings/]: Failed to load properties from file: server.properties
+java.nio.file.NoSuchFileException: server.properties
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:92) ~[?:?]
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106) ~[?:?]
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111) ~[?:?]
+	at sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:218) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:380) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:432) ~[?:?]
+	at java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:422) ~[?:?]
+	at java.nio.file.Files.newInputStream(Files.java:160) ~[?:?]
+	at net.minecraft.server.dedicated.Settings.loadFromFile(Settings.java:36) ~[forge-1.20.1-47.4.0.jar:?]
+	at net.minecraft.server.dedicated.DedicatedServerProperties.fromFile(DedicatedServerProperties.java:122) ~[forge-1.20.1-47.4.0.jar:?]
+	at net.minecraft.server.dedicated.DedicatedServerSettings.<init>(DedicatedServerSettings.java:12) ~[forge-1.20.1-47.4.0.jar:?]
+	at net.minecraft.server.Main.main(Main.java:126) ~[forge-1.20.1-47.4.0.jar:?]
+	at net.minecraftforge.gametest.GameTestMain.main(GameTestMain.java:16) ~[forge-1.20.1-47.4.0.jar:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?]
+	at net.minecraftforge.fml.loading.targets.ForgeGametestUserdevLaunchHandler.devService(ForgeGametestUserdevLaunchHandler.java:16) ~[fmlloader-1.20.1-47.4.0.jar:?]
+	at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.4.0.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.10.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.10.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.10.jar:?]
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.10.jar:?]
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.10.jar:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.10.jar:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.10.jar:?]
+	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?]
+	at net.neoforged.devlaunch.Main.main(Main.java:57) ~[?:?]
+[27Oct2026 14:08:50.685] [main/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[27Oct2026 14:08:50.739] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/work/McTestBuilderNF/McTestBuilderNF/build/moddev/artifacts/forge-1.20.1-47.4.0.jar%23147!/assets/.mcassetsroot' uses unexpected schema
+[27Oct2026 14:08:50.739] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/work/McTestBuilderNF/McTestBuilderNF/build/moddev/artifacts/forge-1.20.1-47.4.0.jar%23147!/data/.mcassetsroot' uses unexpected schema
+[27Oct2026 14:08:52.386] [main/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
+[27Oct2026 14:08:52.532] [main/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1271 advancements
+[27Oct2026 14:08:53.159] [main/INFO] [net.minecraftforge.gametest.ForgeGameTestHooks/]: Enabled Gametest Namespaces: [aibuildassistantnf]
+[27Oct2026 14:08:53.216] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./world/serverconfig/forge-server.toml is not correct. Correcting
+[27Oct2026 14:08:53.217] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server was corrected from null to its default, SimpleCommentedConfig:{}. 
+[27Oct2026 14:08:53.217] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+[27Oct2026 14:08:53.218] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+[27Oct2026 14:08:53.219] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.fullBoundingBoxLadders was corrected from null to its default, false. 
+[27Oct2026 14:08:53.219] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.zombieBaseSummonChance was corrected from null to its default, 0.1. 
+[27Oct2026 14:08:53.219] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.zombieBabyChance was corrected from null to its default, 0.05. 
+[27Oct2026 14:08:53.219] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.permissionHandler was corrected from null to its default, forge:default_handler. 
+[27Oct2026 14:08:53.222] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.advertiseDedicatedServerToLan was corrected from null to its default, true. 
+[27Oct2026 14:08:53.222] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.useItemWithDurationZero was corrected from null to its default, false. 
+[27Oct2026 14:08:58.801] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[27Oct2026 14:08:59.728] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[27Oct2026 14:08:59.729] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[27Oct2026 14:08:59.973] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[27Oct2026 14:09:00.305] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[27Oct2026 14:09:00.810] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[27Oct2026 14:09:01.328] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 1%
+[27Oct2026 14:09:01.821] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 1%
+[27Oct2026 14:09:02.308] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 2%
+[27Oct2026 14:09:02.810] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 3%
+[27Oct2026 14:09:03.312] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 3%
+[27Oct2026 14:09:03.824] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 4%
+[27Oct2026 14:09:04.303] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 5%
+[27Oct2026 14:09:04.804] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 7%
+[27Oct2026 14:09:05.302] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 8%
+[27Oct2026 14:09:05.812] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 9%
+[27Oct2026 14:09:06.309] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 10%
+[27Oct2026 14:09:06.803] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 12%
+[27Oct2026 14:09:07.311] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 13%
+[27Oct2026 14:09:07.814] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 15%
+[27Oct2026 14:09:08.303] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 16%
+[27Oct2026 14:09:08.803] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 17%
+[27Oct2026 14:09:09.318] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 19%
+[27Oct2026 14:09:09.818] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 20%
+[27Oct2026 14:09:10.342] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 22%
+[27Oct2026 14:09:10.805] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 23%
+[27Oct2026 14:09:11.308] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 24%
+[27Oct2026 14:09:11.804] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 27%
+[27Oct2026 14:09:12.324] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 29%
+[27Oct2026 14:09:12.802] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 31%
+[27Oct2026 14:09:13.306] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 34%
+[27Oct2026 14:09:13.805] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 36%
+[27Oct2026 14:09:14.310] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 38%
+[27Oct2026 14:09:14.810] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 40%
+[27Oct2026 14:09:15.302] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 42%
+[27Oct2026 14:09:15.828] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 44%
+[27Oct2026 14:09:16.302] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 46%
+[27Oct2026 14:09:16.836] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 48%
+[27Oct2026 14:09:17.314] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 49%
+[27Oct2026 14:09:17.803] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 51%
+[27Oct2026 14:09:18.324] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 54%
+[27Oct2026 14:09:18.805] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 55%
+[27Oct2026 14:09:19.304] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 58%
+[27Oct2026 14:09:19.812] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 60%
+[27Oct2026 14:09:20.307] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 62%
+[27Oct2026 14:09:20.821] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 64%
+[27Oct2026 14:09:21.302] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 67%
+[27Oct2026 14:09:21.838] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 69%
+[27Oct2026 14:09:22.302] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 71%
+[27Oct2026 14:09:22.852] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 75%
+[27Oct2026 14:09:23.312] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 76%
+[27Oct2026 14:09:23.806] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 78%
+[27Oct2026 14:09:24.301] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 80%
+[27Oct2026 14:09:24.806] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 83%
+[27Oct2026 14:09:25.327] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 86%
+[27Oct2026 14:09:25.809] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 89%
+[27Oct2026 14:09:26.302] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 91%
+[27Oct2026 14:09:26.802] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 93%
+[27Oct2026 14:09:27.302] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 96%
+[27Oct2026 14:09:27.802] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 99%
+[27Oct2026 14:09:27.837] [Server thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 29037 ms
+[27Oct2026 14:09:27.838] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: Started game test server
+[27Oct2026 14:09:27.843] [Server thread/INFO] [net.minecraftforge.server.permission.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
+[27Oct2026 14:09:31.233] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestBatchRunner/]: Running test batch 'defaultBatch:1' (15 tests)...
+[27Oct2026 14:09:31.592] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: 15 tests are now running!
+[27Oct2026 14:09:31.607] [Server thread/WARN] [net.minecraft.server.MinecraftServer/]: Can't keep up! Is the server overloaded? Running 3714ms or 74 ticks behind
+[27Oct2026 14:09:32.577] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 286 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:32.623] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:33.932] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 323 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:33.945] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:34.251] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 327 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:34.257] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:34.351] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 328 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:34.356] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:34.457] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 363 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:34.462] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:38.000] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 365 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:38.004] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:38.065] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 366 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:38.069] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:38.227] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 367 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:38.231] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:38.326] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 402 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:38.330] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:38.381] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 403 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:38.384] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:38.397] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 404 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:38.400] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:38.411] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 405 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:38.414] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:38.482] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 406 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:38.485] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:38.497] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 407 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:38.500] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:38.608] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 408 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:38.612] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:38.659] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 409 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:38.662] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:38.700] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 410 at (0.5, 61.0, 0.5)
+[27Oct2026 14:09:38.703] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[27Oct2026 14:09:40.304] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: [+_+_+++++++_+++]
+[27Oct2026 14:09:41.113] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: [+_+_+++++++_+++]
+[27Oct2026 14:09:41.750] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: [+++_+++++++_+++]
+[27Oct2026 14:09:42.330] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: [+++++++++++_+++]
+[27Oct2026 14:09:42.370] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: [+++++++++++++++]
+[27Oct2026 14:09:42.371] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: ========= 15 GAME TESTS COMPLETE ======================
+[27Oct2026 14:09:42.371] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: All 15 required tests passed :)
+[27Oct2026 14:09:42.372] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: ====================================================
+[27Oct2026 14:09:42.372] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[27Oct2026 14:09:42.372] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[27Oct2026 14:09:42.406] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[27Oct2026 14:09:42.406] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[27Oct2026 14:09:42.411] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[27Oct2026 14:09:42.411] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[27Oct2026 14:09:42.413] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[27Oct2026 14:09:42.413] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[27Oct2026 14:09:42.415] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[27Oct2026 14:09:42.415] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[27Oct2026 14:09:42.417] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[27Oct2026 14:09:42.417] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[27Oct2026 14:09:42.419] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[27Oct2026 14:09:42.419] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[27Oct2026 14:09:42.421] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[27Oct2026 14:09:42.421] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[27Oct2026 14:09:42.423] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[27Oct2026 14:09:42.423] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[27Oct2026 14:09:42.425] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[27Oct2026 14:09:42.425] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[27Oct2026 14:09:42.427] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[27Oct2026 14:09:44.333] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[27Oct2026 14:09:45.738] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[27Oct2026 14:09:45.739] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[27Oct2026 14:09:45.768] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[27Oct2026 14:09:45.768] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[27Oct2026 14:09:45.768] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[27Oct2026 14:09:45.768] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
+[27Oct2026 14:09:46.218] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: Game test server shutting down

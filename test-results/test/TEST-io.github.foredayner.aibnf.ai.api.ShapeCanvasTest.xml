@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.foredayner.aibnf.ai.api.ShapeCanvasTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-27T14:08:19.102Z" hostname="runnervmwhx2h" time="0.166">
+  <properties/>
+  <testcase name="conesCapsulesTubesAndRoundBoxes()" classname="io.github.foredayner.aibnf.ai.api.ShapeCanvasTest" time="0.017"/>
+  <testcase name="mirrorMakesBothSides()" classname="io.github.foredayner.aibnf.ai.api.ShapeCanvasTest" time="0.004"/>
+  <testcase name="coverUsesFewBoxes()" classname="io.github.foredayner.aibnf.ai.api.ShapeCanvasTest" time="0.001"/>
+  <testcase name="equipmentUsesTheFinerGrid()" classname="io.github.foredayner.aibnf.ai.api.ShapeCanvasTest" time="0.001"/>
+  <testcase name="sphereIsSmoothAndFitsTheBudget()" classname="io.github.foredayner.aibnf.ai.api.ShapeCanvasTest" time="0.134"/>
+  <testcase name="thinStemsStayInOnePiece()" classname="io.github.foredayner.aibnf.ai.api.ShapeCanvasTest" time="0.003"/>
+  <testcase name="laterShapesPaintOverEarlierOnes()" classname="io.github.foredayner.aibnf.ai.api.ShapeCanvasTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

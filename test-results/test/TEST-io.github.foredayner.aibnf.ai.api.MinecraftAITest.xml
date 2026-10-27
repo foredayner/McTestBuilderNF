@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.foredayner.aibnf.ai.api.MinecraftAITest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-27T14:08:19.005Z" hostname="runnervmwhx2h" time="0.095">
+  <properties/>
+  <testcase name="blockStatesTurnWithTheBuild()" classname="io.github.foredayner.aibnf.ai.api.MinecraftAITest" time="0.089"/>
+  <testcase name="blockStateNbt()" classname="io.github.foredayner.aibnf.ai.api.MinecraftAITest" time="0.0"/>
+  <testcase name="summonCentresThePartOnTheEntity()" classname="io.github.foredayner.aibnf.ai.api.MinecraftAITest" time="0.004"/>
+  <system-out><![CDATA[2026-10-27 14:08:15,941 Test worker WARN Advanced terminal features are not available in this environment
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

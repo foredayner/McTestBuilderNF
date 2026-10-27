@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.foredayner.aibnf.ai.build.BuildPlanTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-27T14:08:19.270Z" hostname="runnervmwhx2h" time="0.039">
+  <properties/>
+  <testcase name="solidBoxesFollowTheShape()" classname="io.github.foredayner.aibnf.ai.build.BuildPlanTest" time="0.001"/>
+  <testcase name="recordSurvivesGzipAndOldFilesGetDefaults()" classname="io.github.foredayner.aibnf.ai.build.BuildPlanTest" time="0.022"/>
+  <testcase name="scalingGrowsFromTheNearBottomEdge()" classname="io.github.foredayner.aibnf.ai.build.BuildPlanTest" time="0.001"/>
+  <testcase name="boundsIgnoreAirAndIncludeParts()" classname="io.github.foredayner.aibnf.ai.build.BuildPlanTest" time="0.001"/>
+  <testcase name="rotatesClockwiseSeenFromAbove()" classname="io.github.foredayner.aibnf.ai.build.BuildPlanTest" time="0.0"/>
+  <testcase name="problemsCatchBigFillsFarBlocksAndBadParts()" classname="io.github.foredayner.aibnf.ai.build.BuildPlanTest" time="0.01"/>
+  <testcase name="facingsAndTurns()" classname="io.github.foredayner.aibnf.ai.build.BuildPlanTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

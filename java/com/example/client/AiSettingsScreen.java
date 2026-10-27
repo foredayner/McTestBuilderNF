@@ -1,0 +1,432 @@
+package com.example.client;
+
+import com.example.client.network.AiClientNetworking;
+import com.example.config.AiBuilderConfig;
+import com.example.config.AiProvider;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
+
+/**
+ * Settings. The form scrolls (mouse wheel) when the window is short, with Save / Cancel always
+ * visible at the bottom. Typed values survive re-layout (scrolling, window resize, the
+ * forbidden-blocks screen), and Esc saves like vanilla option screens; Cancel discards.
+ */
+public class AiSettingsScreen extends Screen {
+
+    private static final int PANEL_WIDTH = 360;
+    private static final int HEADER = 30;
+    private static final int FOOTER = 32;
+    private static final int CONTENT_HEIGHT = 380;
+    private static final int LABEL_COLOR = WoodUi.INK;
+    private static final int SECTION_COLOR = WoodUi.TAG;
+
+    private static final List<String> OLLAMA_MODELS = List.of(
+        "qwen2.5-coder:7b", "qwen2.5-coder:14b", "qwen2.5-coder:3b", "gemma2:2b", "llama3.2", "mistral", "qwen2.5"
+    );
+    private static final List<String> OPENAI_MODELS = List.of(
+        "gpt-4.1-mini", "gpt-4.1", "gpt-4o", "gpt-4o-mini", "gpt-5"
+    );
+    private static final List<String> CLAUDE_MODELS = List.of(
+        "claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5"
+    );
+    private static final List<Integer> KEEP_ALIVE = List.of(5, 30, 120, -1);
+
+    private final Screen parent;
+    private final AiBuilderConfig draft;
+    private boolean saved = false;
+    private int scroll = 0;
+
+    private int panelX;
+    private int panelY;
+    private int panelHeight;
+
+    private CycleButton<AiProvider> providerButton;
+    private CycleButton<String> modelPresetButton;
+    private EditBox modelField;
+    private EditBox apiUrlField;
+    private EditBox apiKeyField;
+    private CycleButton<Integer> keepAliveButton;
+    private BuildSpeedSlider speedSlider;
+    private CycleButton<Integer> retryButton;
+    private Button forbiddenBlocksButton;
+    private CycleButton<Boolean> debugToggle;
+    private CycleButton<Boolean> webSearchToggle;
+    private final List<AbstractWidget> scrolled = new ArrayList<>();
+
+    public AiSettingsScreen(Screen parent) {
+        super(Component.literal("Minecraft AI Build Assistant Settings"));
+        this.parent = parent;
+        this.draft = AiBuilderConfig.get().copy();
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        syncDraft(); // keep what was typed when the screen is laid out again
+        layoutPanel();
+        buildWidgets();
+    }
+
+    private void layoutPanel() {
+        this.panelHeight = Math.min(this.height - 16, HEADER + CONTENT_HEIGHT + FOOTER);
+        this.panelX = (this.width - PANEL_WIDTH) / 2;
+        this.panelY = (this.height - this.panelHeight) / 2;
+        this.scroll = Math.max(0, Math.min(this.scroll, maxScroll()));
+    }
+
+    private int viewTop() { return this.panelY + HEADER; }
+    private int viewBottom() { return this.panelY + this.panelHeight - FOOTER; }
+    private int maxScroll() { return Math.max(0, CONTENT_HEIGHT - (this.panelHeight - HEADER - FOOTER)); }
+    /** Screen y of a row at content offset rel. */
+    private int at(int rel) { return viewTop() + rel - this.scroll; }
+
+    private <T extends AbstractWidget> T scrolledChild(T widget) {
+        this.scrolled.add(widget);
+        return this.addRenderableWidget(widget);
+    }
+
+    private void buildWidgets() {
+        this.scrolled.clear();
+        int x = this.panelX + 16;
+        int w = PANEL_WIDTH - 32;
+
+        this.providerButton = scrolledChild(CycleButton.builder((AiProvider p) -> Component.literal(p.getDisplayName()))
+            .withValues(Arrays.asList(AiProvider.values()))
+            .withInitialValue(this.draft.provider)
+            .create(x, at(20), w, 20, Component.literal("AI 종류"), (button, provider) -> switchProvider(provider)));
+
+        this.modelPresetButton = scrolledChild(createModelPresetButton(x, at(44), w));
+
+        this.modelField = new EditBox(this.font, x + 5, at(80) + 6, w - 10, 12, Component.literal("모델 이름"));
+        this.modelField.setMaxLength(128);
+        this.modelField.setValue(this.draft.modelName);
+        this.modelField.setHint(Component.literal("모델 이름 입력…"));
+        scrolledChild(this.modelField);
+
+        this.apiUrlField = new EditBox(this.font, x + 5, at(132) + 6, w - 10, 12, Component.literal("API URL"));
+        this.apiUrlField.setMaxLength(256);
+        this.apiUrlField.setValue(this.draft.apiUrl);
+        scrolledChild(this.apiUrlField);
+
+        this.apiKeyField = new EditBox(this.font, x + 5, at(176) + 6, w - 10, 12, Component.literal("API Key"));
+        this.apiKeyField.setMaxLength(512);
+        this.apiKeyField.setValue(this.draft.apiKey);
+        this.apiKeyField.setHint(Component.literal("sk-..."));
+        this.apiKeyField.setFormatter(this::maskApiKey); // 1.21.4 name of addFormatter
+        scrolledChild(this.apiKeyField);
+
+        this.keepAliveButton = scrolledChild(CycleButton.builder((Integer m) -> Component.literal(keepAliveLabel(m)))
+            .withValues(KEEP_ALIVE)
+            .withInitialValue(KEEP_ALIVE.contains(this.draft.keepAliveMinutes) ? this.draft.keepAliveMinutes : 30)
+            .create(x, at(176), w, 20, Component.literal("모델 유지"), (button, m) -> this.draft.keepAliveMinutes = m));
+
+        this.speedSlider = scrolledChild(new BuildSpeedSlider(x, at(220), w, this.draft.ticksPerBlock));
+
+        this.retryButton = scrolledChild(CycleButton.builder((Integer n) -> Component.literal(n == 0 ? "끔" : n + "번"))
+            .withValues(List.of(0, 1, 2, 3, 4, 5))
+            .withInitialValue(this.draft.autoRetries)
+            .create(x, at(244), w, 20, Component.literal("자동 수정"), (button, n) -> this.draft.autoRetries = n));
+
+        this.forbiddenBlocksButton = scrolledChild(Button.builder(forbiddenBlocksLabel(), button -> openForbiddenBlocksScreen())
+            .bounds(x, at(296), w, 20)
+            .build());
+
+        this.debugToggle = scrolledChild(CycleButton.onOffBuilder(this.draft.debugLogEnabled)
+            .create(x, at(320), w, 20, Component.literal("디버그 로그"), (button, enabled) -> this.draft.debugLogEnabled = enabled));
+
+        this.webSearchToggle = scrolledChild(CycleButton.onOffBuilder(this.draft.openAiWebSearchEnabled)
+            .create(x, at(344), w, 20, Component.literal("웹 검색 (기본값)"), (button, enabled) -> this.draft.openAiWebSearchEnabled = enabled));
+
+        int buttonY = this.panelY + this.panelHeight - 26;
+        int buttonWidth = (w - 8) / 2;
+        this.addRenderableWidget(new WoodUi.WoodButton(x, buttonY, buttonWidth, 20, Component.literal("저장"), button -> saveSettings(), false));
+        this.addRenderableWidget(new WoodUi.WoodButton(x + buttonWidth + 8, buttonY, buttonWidth, 20, Component.literal("취소"), button -> {
+                this.saved = true; // discard
+                this.minecraft.setScreen(this.parent);
+            }, false));
+
+        for (EditBox field : List.of(this.modelField, this.apiUrlField, this.apiKeyField)) {
+            field.setBordered(false);
+            field.setTextColor(WoodUi.PAPER);
+        }
+        updateVisibility();
+    }
+
+    /** Text wells behind the (background-less) text fields. */
+    private void paintFields(GuiGraphics ctx) {
+        for (EditBox field : List.of(this.modelField, this.apiUrlField, this.apiKeyField)) {
+            if (field.visible) {
+                WoodUi.well(ctx, field.getX() - 5, field.getY() - 6, field.getX() + field.getWidth() + 5, field.getY() + 14, field.isFocused());
+            }
+        }
+    }
+
+    /** Re-skin the vanilla cycling buttons and the slider as wooden boards. */
+    private void paintWidgets(GuiGraphics ctx) {
+        for (AbstractWidget widget : this.scrolled) {
+            if (!widget.visible || widget instanceof EditBox || widget instanceof WoodUi.WoodButton) {
+                continue;
+            }
+            int l = widget.getX(), t = widget.getY(), r = l + widget.getWidth(), b = t + widget.getHeight();
+            String label = widget.getMessage().getString();
+            if (widget instanceof BuildSpeedSlider slider) {
+                WoodUi.inset(ctx, l, t + 4, r, b - 4, 0xFFE8C48A);
+                int knob = l + (int) Math.round(slider.position() * (widget.getWidth() - 10));
+                WoodUi.bevel(ctx, knob, t, knob + 10, b, widget.isHovered() ? 0xFFF4B868 : WoodUi.WOOD, WoodUi.WOOD_LIGHT, WoodUi.WOOD_DARK, 2);
+                ctx.drawString(this.font, label, l + (widget.getWidth() - this.font.width(label)) / 2, t + 6, WoodUi.INK, false);
+                continue;
+            }
+            WoodUi.bevel(ctx, l, t, r, b, widget.isHovered() ? 0xFFF4B868 : 0xFFE9A55A, 0xFFFDD995, 0xFFA45A22, 2);
+            ctx.drawString(this.font, label, l + (widget.getWidth() - this.font.width(label)) / 2 + 1, t + 7, WoodUi.INK, false);
+        }
+    }
+
+    /** Provider-dependent rows, and anything scrolled outside the visible area, are hidden. */
+    private void updateVisibility() {
+        boolean ollama = this.draft.provider == AiProvider.OLLAMA;
+        boolean openAi = this.draft.provider.supportsWebSearch();
+        for (AbstractWidget widget : this.scrolled) {
+            boolean shown = widget.getY() >= viewTop() && widget.getY() + widget.getHeight() <= viewBottom();
+            if (widget == this.apiKeyField) {
+                shown &= !ollama;
+            } else if (widget == this.keepAliveButton) {
+                shown &= ollama;
+            } else if (widget == this.webSearchToggle) {
+                shown &= openAi;
+            }
+            widget.visible = shown;
+            widget.active = shown;
+        }
+    }
+
+    private void switchProvider(AiProvider provider) {
+        AiProvider previous = this.draft.provider; // the button already shows the new one
+        syncDraft();
+        if (previous != null) {
+            this.draft.modelByProvider.put(previous.name(), this.draft.modelName);
+        }
+        this.draft.provider = provider;
+        this.draft.apiUrl = provider.getDefaultApiUrl();
+        String remembered = this.draft.modelByProvider.get(provider.name());
+        this.draft.modelName = remembered != null && !remembered.isBlank() ? remembered : getModelPresets(provider).get(0);
+        this.clearWidgets();
+        this.init();
+    }
+
+    /** Copy what is on screen into the draft (no-op before the widgets exist). */
+    private void syncDraft() {
+        if (this.modelField == null) {
+            return;
+        }
+        this.draft.provider = this.providerButton.getValue();
+        this.draft.modelName = this.modelField.getValue().trim();
+        this.draft.apiUrl = this.apiUrlField.getValue().trim();
+        if (this.draft.provider != AiProvider.OLLAMA) {
+            this.draft.apiKey = this.apiKeyField.getValue().trim();
+        }
+        this.draft.keepAliveMinutes = this.keepAliveButton.getValue();
+        this.draft.ticksPerBlock = this.speedSlider.getTicks();
+        this.draft.autoRetries = this.retryButton.getValue();
+        this.draft.debugLogEnabled = this.debugToggle.getValue();
+        this.draft.openAiWebSearchEnabled = this.webSearchToggle.getValue();
+    }
+
+    private CycleButton<String> createModelPresetButton(int x, int y, int width) {
+        List<String> presets = new ArrayList<>(getModelPresets(this.draft.provider));
+        // Show the model actually in use, even when it is not one of the presets.
+        if (this.draft.modelName != null && !this.draft.modelName.isBlank() && !presets.contains(this.draft.modelName)) {
+            presets.add(0, this.draft.modelName);
+        }
+        return CycleButton.builder((String model) -> Component.literal(model))
+            .withValues(presets)
+            .withInitialValue(presets.contains(this.draft.modelName) ? this.draft.modelName : presets.get(0))
+            .create(x, y, width, 20, Component.literal("모델 프리셋"), (button, model) -> this.modelField.setValue(model));
+    }
+
+    private List<String> getModelPresets(AiProvider provider) {
+        return switch (provider) {
+            case OLLAMA -> OLLAMA_MODELS;
+            case OPENAI -> OPENAI_MODELS;
+            case CLAUDE -> CLAUDE_MODELS;
+            case CUSTOM -> List.of("custom-model");
+        };
+    }
+
+    private static String keepAliveLabel(int minutes) {
+        if (minutes < 0) {
+            return "항상 (Ollama를 끌 때까지)";
+        }
+        return minutes >= 60 ? (minutes / 60) + "시간" : minutes + "분";
+    }
+
+    private FormattedCharSequence maskApiKey(String text, int firstCharacterIndex) {
+        return FormattedCharSequence.forward("•".repeat(text.length()), Style.EMPTY);
+    }
+
+    private Component forbiddenBlocksLabel() {
+        int count = this.draft.forbiddenBlocks == null ? 0 : this.draft.forbiddenBlocks.size();
+        return Component.literal("금지 블록 (" + count + "개)");
+    }
+
+    private void openForbiddenBlocksScreen() {
+        if (this.minecraft == null) {
+            return;
+        }
+        syncDraft();
+        this.minecraft.setScreen(new ForbiddenBlocksScreen(this, this.draft.forbiddenBlocks, updated -> {
+            this.draft.forbiddenBlocks = new ArrayList<>(updated);
+            if (this.forbiddenBlocksButton != null) {
+                this.forbiddenBlocksButton.setMessage(forbiddenBlocksLabel());
+            }
+        }));
+    }
+
+    private void saveSettings() {
+        syncDraft();
+        AiBuilderConfig config = AiBuilderConfig.get();
+        config.applyFrom(
+            this.draft.provider,
+            this.draft.modelName,
+            this.draft.apiUrl,
+            this.draft.apiKey,
+            this.draft.ticksPerBlock,
+            this.draft.forbiddenBlocksPath,
+            this.draft.forbiddenBlocks,
+            this.draft.debugLogEnabled,
+            this.draft.openAiWebSearchEnabled
+        );
+        config.autoRetries = this.draft.autoRetries;
+        config.keepAliveMinutes = this.draft.keepAliveMinutes;
+        config.modelByProvider = new java.util.HashMap<>(this.draft.modelByProvider);
+        AiBuilderConfig.save();
+        AiClientNetworking.sendSettingsSync(AiBuilderConfig.get());
+        AiClientState.addLog("[Settings] 저장했어요. 모델: " + config.modelName);
+        this.saved = true;
+
+        if (this.minecraft != null) {
+            this.minecraft.setScreen(this.parent);
+        }
+    }
+
+    /** Esc keeps the changes, like vanilla option screens. */
+    @Override
+    public void onClose() {
+        if (!this.saved) {
+            saveSettings();
+            return;
+        }
+        if (this.minecraft != null) {
+            this.minecraft.setScreen(this.parent);
+        }
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        if (verticalAmount != 0.0D && maxScroll() > 0) {
+            int next = Math.max(0, Math.min(maxScroll(), this.scroll - (int) Math.signum(verticalAmount) * 24));
+            if (next != this.scroll) {
+                syncDraft();
+                this.scroll = next;
+                this.clearWidgets();
+                this.init();
+            }
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+    }
+
+    @Override
+    public void render(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
+        ctx.fill(0, 0, this.width, this.height, 0x55000000);
+        WoodUi.frame(ctx, this.panelX - 6, this.panelY - 2, this.panelX + PANEL_WIDTH + 6, this.panelY + this.panelHeight + 2);
+        WoodUi.plaque(ctx, this.font, "설정", this.panelX + PANEL_WIDTH / 2, this.panelY + 6, WoodUi.INK);
+
+        int x = this.panelX + 16;
+        ctx.enableScissor(this.panelX, viewTop(), this.panelX + PANEL_WIDTH, viewBottom());
+        label(ctx, "1. AI 선택", x, at(6), SECTION_COLOR);
+        label(ctx, "모델 이름", x, at(68), LABEL_COLOR);
+        label(ctx, "2. 연결", x, at(108), SECTION_COLOR);
+        label(ctx, "API 주소", x, at(120), LABEL_COLOR);
+        if (this.draft.provider == AiProvider.OLLAMA) {
+            label(ctx, "건축 사이에 모델을 메모리에 둘 시간", x, at(164), LABEL_COLOR);
+        } else {
+            label(ctx, "API 키", x, at(164), LABEL_COLOR);
+        }
+        label(ctx, "3. 건축", x, at(204), SECTION_COLOR);
+        label(ctx, "4. 일반 · 보안", x, at(272), SECTION_COLOR);
+        label(ctx, "AI가 쓰면 안 되는 블록 고르기", x, at(284), LABEL_COLOR);
+        if (this.draft.provider == AiProvider.OPENAI) {
+            label(ctx, "웹 검색은 gpt-4o / gpt-4.1 / gpt-5 전용", x, at(368), LABEL_COLOR);
+        } else if (this.draft.provider == AiProvider.CLAUDE) {
+            label(ctx, "웹 검색은 검색 1회마다 추가 요금 (최대 3회)", x, at(368), LABEL_COLOR);
+        }
+        ctx.disableScissor();
+
+        paintFields(ctx);
+        super.render(ctx, mouseX, mouseY, delta);
+        paintWidgets(ctx);
+
+        if (maxScroll() > 0) {
+            int trackTop = viewTop() + 2, trackBottom = viewBottom() - 2;
+            int barH = Math.max(12, (trackBottom - trackTop) * (this.panelHeight - HEADER - FOOTER) / CONTENT_HEIGHT);
+            int barY = trackTop + (trackBottom - trackTop - barH) * this.scroll / maxScroll();
+            WoodUi.inset(ctx, this.panelX + PANEL_WIDTH - 8, trackTop, this.panelX + PANEL_WIDTH - 2, trackBottom, 0xFFE8C48A);
+            WoodUi.bevel(ctx, this.panelX + PANEL_WIDTH - 8, barY, this.panelX + PANEL_WIDTH - 2, barY + barH,
+                WoodUi.WOOD, WoodUi.WOOD_LIGHT, WoodUi.WOOD_DARK, 1);
+        }
+    }
+
+    private void label(GuiGraphics ctx, String text, int x, int y, int color) {
+        ctx.drawString(this.font, Component.literal(text), x, y, color, false);
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
+    }
+
+    private static final class BuildSpeedSlider extends AbstractSliderButton {
+
+        BuildSpeedSlider(int x, int y, int width, int ticks) {
+            super(x, y, width, 20, Component.literal(""), normalize(ticks));
+            updateMessage();
+        }
+
+        @Override
+        protected void updateMessage() {
+            setMessage(Component.literal("건축 속도: 블록당 " + getTicks() + "틱"));
+        }
+
+        @Override
+        protected void applyValue() {
+            updateMessage();
+        }
+
+        double position() {
+            return this.value;
+        }
+
+        int getTicks() {
+            return (int) Math.round(this.value * 19.0D) + 1;
+        }
+
+        private static double normalize(int ticks) {
+            return (Math.clamp(ticks, 1, 20) - 1) / 19.0D;
+        }
+    }
+}

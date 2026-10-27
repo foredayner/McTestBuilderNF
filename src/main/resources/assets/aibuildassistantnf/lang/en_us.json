@@ -1,0 +1,21 @@
+{
+  "key.aibuildassistantnf.open_ai_ui": "Open Minecraft AI Build Assistant",
+  "key.categories.aibuildassistantnf": "Minecraft AI Build Assistant",
+  "key.aibuildassistantnf.remove_object": "Remove AI object (look at it, press twice)",
+  "item.aibuildassistantnf.object": "AI Object",
+  "entity.aibuildassistantnf.hitbox": "AI Object Hitbox",
+  "item.aibuildassistantnf.gear_sword": "AI Sword",
+  "item.aibuildassistantnf.gear_axe": "AI Axe",
+  "item.aibuildassistantnf.gear_pickaxe": "AI Pickaxe",
+  "item.aibuildassistantnf.gear_shovel": "AI Shovel",
+  "item.aibuildassistantnf.gear_hoe": "AI Hoe",
+  "item.aibuildassistantnf.gear_spear": "AI Spear",
+  "item.aibuildassistantnf.gear_hammer": "AI Hammer",
+  "item.aibuildassistantnf.gear_staff": "AI Staff",
+  "item.aibuildassistantnf.gear_bow": "AI Bow",
+  "entity.aibuildassistantnf.arrow": "AI Arrow",
+  "item.aibuildassistantnf.gear_helmet": "AI Helmet",
+  "item.aibuildassistantnf.gear_hat": "AI Hat",
+  "item.aibuildassistantnf.gear_chestplate": "AI Chestplate",
+  "item.aibuildassistantnf.gear_back": "AI Back Piece"
+}

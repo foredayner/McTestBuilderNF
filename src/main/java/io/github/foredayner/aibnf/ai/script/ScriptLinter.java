@@ -145,7 +145,7 @@ public final class ScriptLinter {
         }
         if (full.contains("[")) {
             try {
-                BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, full, false);
+                BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), full, false);
             } catch (Exception exception) {
                 return "\"" + value + "\" has invalid block states (" + exception.getMessage() + ").";
             }

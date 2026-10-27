@@ -25,7 +25,7 @@ public class AiBuildAssistantClient {
         modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
             // Solid object hitboxes are invisible; object items draw their own picture.
             event.registerEntityRenderer(io.github.foredayner.aibnf.content.AibContent.HITBOX,
-                net.minecraft.client.renderer.entity.NoopRenderer::new);
+                net.minecraft.client.renderer.entity.NoopRenderer<io.github.foredayner.aibnf.content.SolidHitboxEntity>::new);
             event.registerEntityRenderer(io.github.foredayner.aibnf.content.AibContent.ARROW, AibArrowRenderer::new);
         });
         modBus.addListener(WearRenderer::addLayers);

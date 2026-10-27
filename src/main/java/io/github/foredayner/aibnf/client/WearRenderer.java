@@ -49,7 +49,7 @@ public final class WearRenderer<T extends LivingEntity, M extends HumanoidModel<
         for (EntityType<?> type : ForgeRegistries.ENTITY_TYPES.getValues()) {
             EntityRenderer<?> renderer;
             try {
-                renderer = event.getEntityRenderer((EntityType) type);
+                renderer = event.getRenderer((EntityType) type);
             } catch (ClassCastException exception) {
                 continue;
             }

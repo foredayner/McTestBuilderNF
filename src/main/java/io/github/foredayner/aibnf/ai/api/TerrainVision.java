@@ -120,7 +120,7 @@ public final class TerrainVision {
 
     public static int sampleGroundLevel(ServerLevel world, BlockPos origin, int x, int z) {
         BlockPos column = origin.offset(x, 0, z);
-        int bottomY = world.getMinY();
+        int bottomY = world.getMinBuildHeight();
 
         for (int y = origin.getY(); y >= bottomY; y--) {
             BlockPos pos = column.atY(y);

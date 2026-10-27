@@ -41,7 +41,7 @@ public class ForbiddenBlocksScreen extends Screen {
     protected void init() {
         super.init();
         layoutPanel();
-        rebuildWidgets();
+        rebuildList();
     }
 
     private void layoutPanel() {
@@ -49,7 +49,7 @@ public class ForbiddenBlocksScreen extends Screen {
         this.panelY = (this.height - PANEL_HEIGHT) / 2;
     }
 
-    private void rebuildWidgets() {
+    private void rebuildList() {
         this.clearWidgets();
 
         int x = this.panelX + 16;
@@ -121,7 +121,7 @@ public class ForbiddenBlocksScreen extends Screen {
         this.blocks.add(normalized);
         this.blocks.sort(String::compareTo);
         this.statusMessage = Component.literal("Added " + BlockIconHelper.shortName(normalized));
-        rebuildWidgets();
+        rebuildList();
     }
 
     private void removeBlock(int index) {
@@ -131,7 +131,7 @@ public class ForbiddenBlocksScreen extends Screen {
 
         String removed = this.blocks.remove(index);
         this.statusMessage = Component.literal("Removed " + BlockIconHelper.shortName(removed));
-        rebuildWidgets();
+        rebuildList();
     }
 
     private void resetDefaults() {
@@ -139,17 +139,17 @@ public class ForbiddenBlocksScreen extends Screen {
         this.blocks.addAll(ForbiddenBlockRegistry.defaultBlocks());
         this.statusMessage = Component.literal("Reset to defaults");
         this.scrollOffset = 0;
-        rebuildWidgets();
+        rebuildList();
     }
 
     private void scroll(int delta) {
         this.scrollOffset += delta;
-        rebuildWidgets();
+        rebuildList();
     }
 
     private void clampScrollOffset() {
         int maxOffset = Math.max(0, this.blocks.size() - VISIBLE_ROWS);
-        this.scrollOffset = Math.clamp(this.scrollOffset, 0, maxOffset);
+        this.scrollOffset = net.minecraft.util.Mth.clamp(this.scrollOffset, 0, maxOffset);
     }
 
     private void finish() {
@@ -216,7 +216,4 @@ public class ForbiddenBlocksScreen extends Screen {
         return false;
     }
 
-    @Override
-    public void renderBackground(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
-    }
 }

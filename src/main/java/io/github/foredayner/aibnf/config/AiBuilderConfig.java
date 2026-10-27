@@ -110,7 +110,7 @@ public final class AiBuilderConfig {
         this.modelName = modelName == null || modelName.isBlank() ? "qwen2.5-coder:7b" : modelName.trim();
         this.apiUrl = apiUrl == null || apiUrl.isBlank() ? this.provider.getDefaultApiUrl() : apiUrl.trim();
         this.apiKey = apiKey == null ? "" : apiKey.trim();
-        this.ticksPerBlock = Math.clamp(ticksPerBlock, 1, 20);
+        this.ticksPerBlock = net.minecraft.util.Mth.clamp(ticksPerBlock, 1, 20);
         this.forbiddenBlocksPath = forbiddenBlocksPath == null || forbiddenBlocksPath.isBlank()
             ? "config/ai_builder/forbidden_blocks.txt"
             : forbiddenBlocksPath.trim();
@@ -190,9 +190,9 @@ public final class AiBuilderConfig {
         if (apiKey == null) {
             apiKey = "";
         }
-        ticksPerBlock = Math.clamp(ticksPerBlock, 1, 20);
-        autoRetries = Math.clamp(autoRetries, 0, 5);
-        keepAliveMinutes = Math.clamp(keepAliveMinutes, -1, 1440);
+        ticksPerBlock = net.minecraft.util.Mth.clamp(ticksPerBlock, 1, 20);
+        autoRetries = net.minecraft.util.Mth.clamp(autoRetries, 0, 5);
+        keepAliveMinutes = net.minecraft.util.Mth.clamp(keepAliveMinutes, -1, 1440);
         if (modelByProvider == null) {
             modelByProvider = new java.util.HashMap<>();
         }

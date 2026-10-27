@@ -73,7 +73,7 @@ public final class GearEffects {
         LAST_SWING.put(player.getUUID(), now);
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getViewVector(1.0F);
-        double reach = player.entityInteractionRange();
+        double reach = player.getEntityReach();
         net.minecraft.world.phys.EntityHitResult aimed = net.minecraft.world.entity.projectile.ProjectileUtil.getEntityHitResult(player, eye,
             eye.add(look.scale(reach)), player.getBoundingBox().expandTowards(look.scale(reach)).inflate(1.0),
             e -> e instanceof LivingEntity && !e.isSpectator() && e.isPickable(), reach * reach);

@@ -332,7 +332,7 @@ public class AiSettingsScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double verticalAmount) {
         if (verticalAmount != 0.0D && maxScroll() > 0) {
             int next = Math.max(0, Math.min(maxScroll(), this.scroll - (int) Math.signum(verticalAmount) * 24));
             if (next != this.scroll) {
@@ -343,7 +343,7 @@ public class AiSettingsScreen extends Screen {
             }
             return true;
         }
-        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        return super.mouseScrolled(mouseX, mouseY, verticalAmount);
     }
 
     @Override
@@ -396,9 +396,6 @@ public class AiSettingsScreen extends Screen {
         return false;
     }
 
-    @Override
-    public void renderBackground(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
-    }
 
     private static final class BuildSpeedSlider extends AbstractSliderButton {
 
@@ -426,7 +423,7 @@ public class AiSettingsScreen extends Screen {
         }
 
         private static double normalize(int ticks) {
-            return (Math.clamp(ticks, 1, 20) - 1) / 19.0D;
+            return (net.minecraft.util.Mth.clamp(ticks, 1, 20) - 1) / 19.0D;
         }
     }
 }

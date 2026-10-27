@@ -40,7 +40,7 @@ public class BlockPickerScreen extends Screen {
     protected void init() {
         super.init();
         layoutPanel();
-        rebuildWidgets();
+        rebuildList();
     }
 
     private void layoutPanel() {
@@ -50,7 +50,7 @@ public class BlockPickerScreen extends Screen {
         this.gridY = this.panelY + 44;
     }
 
-    private void rebuildWidgets() {
+    private void rebuildList() {
         this.clearWidgets();
 
         int listTop = this.gridY;
@@ -76,7 +76,7 @@ public class BlockPickerScreen extends Screen {
     private void clampScroll() {
         int totalRows = (blockIds.size() + COLS - 1) / COLS;
         int maxScroll = Math.max(0, totalRows - ROWS);
-        this.scrollRow = Math.clamp(this.scrollRow, 0, maxScroll);
+        this.scrollRow = net.minecraft.util.Mth.clamp(this.scrollRow, 0, maxScroll);
     }
 
     private void selectBlock(String blockId) {
@@ -158,12 +158,12 @@ public class BlockPickerScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double verticalAmount) {
         if (verticalAmount != 0.0D) {
             scroll(verticalAmount > 0.0D ? -1 : 1);
             return true;
         }
-        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        return super.mouseScrolled(mouseX, mouseY, verticalAmount);
     }
 
     private String blockAt(double mouseX, double mouseY) {
@@ -189,7 +189,4 @@ public class BlockPickerScreen extends Screen {
         return false;
     }
 
-    @Override
-    public void renderBackground(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
-    }
 }

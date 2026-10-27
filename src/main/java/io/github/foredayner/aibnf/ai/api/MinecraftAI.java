@@ -513,7 +513,7 @@ public class MinecraftAI {
             return "uninitialized";
         }
 
-        int max = Math.clamp(toInt(maxDistance), 1, 16);
+        int max = net.minecraft.util.Mth.clamp(toInt(maxDistance), 1, 16);
         StringBuilder report = new StringBuilder();
         report.append("forwardScan max=").append(max).append(" facing=").append(getFacing()).append('\n');
 
@@ -535,8 +535,8 @@ public class MinecraftAI {
 
         int ix = toInt(x);
         int iz = toInt(z);
-        int iw = Math.clamp(toInt(width), 1, 15);
-        int il = Math.clamp(toInt(length), 1, 15);
+        int iw = net.minecraft.util.Mth.clamp(toInt(width), 1, 15);
+        int il = net.minecraft.util.Mth.clamp(toInt(length), 1, 15);
 
         StringBuilder report = new StringBuilder();
         report.append("areaScan origin=(").append(ix).append(",").append(iz).append(")")
@@ -594,7 +594,7 @@ public class MinecraftAI {
         }
 
         BlockPos column = origin.offset(ix, 0, iz);
-        int bottomY = world.getMinY();
+        int bottomY = world.getMinBuildHeight();
 
         for (int y = origin.getY(); y >= bottomY; y--) {
             BlockPos pos = column.atY(y);
@@ -1066,7 +1066,7 @@ public class MinecraftAI {
             return block;
         }
         try {
-            BlockState state = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, block, false).blockState();
+            BlockState state = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), block, false).blockState();
             Rotation rotation = switch (t) {
                 case 1 -> Rotation.CLOCKWISE_90;
                 case 2 -> Rotation.CLOCKWISE_180;

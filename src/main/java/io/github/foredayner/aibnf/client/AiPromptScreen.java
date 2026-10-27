@@ -835,9 +835,9 @@ public class AiPromptScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double verticalAmount) {
         if (verticalAmount == 0.0D || mouseX < left() || mouseX > right()) {
-            return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+            return super.mouseScrolled(mouseX, mouseY, verticalAmount);
         }
         int step = verticalAmount > 0 ? 1 : -1;
         switch (page) {
@@ -874,9 +874,6 @@ public class AiPromptScreen extends Screen {
         return false;
     }
 
-    @Override
-    public void renderBackground(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
-    }
 
     @Override
     public boolean shouldCloseOnEsc() {

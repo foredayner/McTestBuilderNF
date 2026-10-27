@@ -32,7 +32,7 @@ public final class BlockCatalog {
         }
 
         int safeOffset = Math.max(0, offset);
-        int safeLimit = Math.clamp(limit, 1, 100);
+        int safeLimit = net.minecraft.util.Mth.clamp(limit, 1, 100);
         int end = Math.min(safeOffset + safeLimit, available.size());
 
         if (safeOffset >= available.size()) {
@@ -48,7 +48,7 @@ public final class BlockCatalog {
 
     public static String search(String query, int limit) {
         String needle = query == null ? "" : query.trim().toLowerCase(Locale.ROOT);
-        int safeLimit = Math.clamp(limit, 1, 100);
+        int safeLimit = net.minecraft.util.Mth.clamp(limit, 1, 100);
 
         List<String> matches = getAvailableIds().stream()
             .filter(id -> needle.isEmpty() || id.contains(needle) || toShortName(id).contains(needle))

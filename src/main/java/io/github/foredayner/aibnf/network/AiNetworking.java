@@ -1,8 +1,22 @@
 package io.github.foredayner.aibnf.network;
 
+import io.github.foredayner.aibnf.AiBuildAssistantMod;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
 import io.github.foredayner.aibnf.ai.approval.BuildApproval;
 import io.github.foredayner.aibnf.ai.build.BuildRecord;
 import io.github.foredayner.aibnf.ai.build.RebuildService;
@@ -11,107 +25,126 @@ import io.github.foredayner.aibnf.ai.build.ObjectService;
 import io.github.foredayner.aibnf.config.AiBuilderConfig;
 import io.github.foredayner.aibnf.config.AiProvider;
 import io.github.foredayner.aibnf.config.ForbiddenBlockRegistry;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import io.github.foredayner.aibnf.network.AiNetworkPayloads.*;
 
 public final class AiNetworking {
 
+    /** Bump when a message changes; both sides must have the same mod version. */
+    private static final String PROTOCOL = "1";
+
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
+        new ResourceLocation(AiBuildAssistantMod.MOD_ID, "main"), () -> PROTOCOL, PROTOCOL::equals, PROTOCOL::equals);
+
+    /**
+     * What the player's game does with each server -> client message. Filled in by the client
+     * code (AiClientNetworking) so this class never loads client-only classes on a server.
+     */
+    public static final Map<Class<?>, Consumer<Object>> CLIENT_HANDLERS = new ConcurrentHashMap<>();
+
     private static boolean payloadsRegistered = false;
+    private static int nextId = 0;
 
     private AiNetworking() {
     }
 
+    private static <M extends Msg> void toClient(Class<M> type, Function<FriendlyByteBuf, M> read) {
+        CHANNEL.messageBuilder(type, nextId++, NetworkDirection.PLAY_TO_CLIENT)
+            .encoder(Msg::write)
+            .decoder(read)
+            .consumerMainThread((msg, ctx) -> {
+                Consumer<Object> handler = CLIENT_HANDLERS.get(type);
+                if (handler != null) {
+                    handler.accept(msg);
+                }
+            })
+            .add();
+    }
+
+    private static <M extends Msg> void toServer(Class<M> type, Function<FriendlyByteBuf, M> read,
+                                                 BiConsumer<M, ServerPlayer> handler) {
+        CHANNEL.messageBuilder(type, nextId++, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(Msg::write)
+            .decoder(read)
+            .consumerMainThread((M msg, Supplier<NetworkEvent.Context> ctx) -> {
+                ServerPlayer player = ctx.get().getSender();
+                if (player != null) {
+                    handler.accept(msg, player);
+                }
+            })
+            .add();
+    }
+
+    /** Registers every message (both directions). Called once while the mod loads. */
     public static void registerPayloads() {
         if (payloadsRegistered) {
             return;
         }
         payloadsRegistered = true;
 
-        PayloadTypeRegistry.playS2C().register(AiNetworkPayloads.AiLogS2CPayload.ID, AiNetworkPayloads.AiLogS2CPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(AiNetworkPayloads.ApprovalPendingS2CPayload.ID, AiNetworkPayloads.ApprovalPendingS2CPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(AiNetworkPayloads.ApprovalClearS2CPayload.ID, AiNetworkPayloads.ApprovalClearS2CPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(AiNetworkPayloads.ApprovalAcceptC2SPayload.ID, AiNetworkPayloads.ApprovalAcceptC2SPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(AiNetworkPayloads.ApprovalDenyC2SPayload.ID, AiNetworkPayloads.ApprovalDenyC2SPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(AiNetworkPayloads.AiSettingsSyncC2SPayload.ID, AiNetworkPayloads.AiSettingsSyncC2SPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(AiNetworkPayloads.BuildCompleteS2CPayload.ID, AiNetworkPayloads.BuildCompleteS2CPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(AiNetworkPayloads.RebuildPartC2SPayload.ID, AiNetworkPayloads.RebuildPartC2SPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(AiNetworkPayloads.UndoC2SPayload.ID, AiNetworkPayloads.UndoC2SPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(AiNetworkPayloads.AttackSwingC2SPayload.ID, AiNetworkPayloads.AttackSwingC2SPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(AiNetworkPayloads.SparkS2CPayload.ID, AiNetworkPayloads.SparkS2CPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(AiNetworkPayloads.BreakObjectC2SPayload.ID, AiNetworkPayloads.BreakObjectC2SPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(AiNetworkPayloads.RemoveObjectC2SPayload.ID, AiNetworkPayloads.RemoveObjectC2SPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(AiNetworkPayloads.NearbyRequestC2SPayload.ID, AiNetworkPayloads.NearbyRequestC2SPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(AiNetworkPayloads.NearbyObjectsS2CPayload.ID, AiNetworkPayloads.NearbyObjectsS2CPayload.CODEC);
+        toClient(AiLogS2CPayload.class, AiLogS2CPayload::read);
+        toClient(ApprovalPendingS2CPayload.class, ApprovalPendingS2CPayload::read);
+        toClient(ApprovalClearS2CPayload.class, ApprovalClearS2CPayload::read);
+        toClient(BuildCompleteS2CPayload.class, BuildCompleteS2CPayload::read);
+        toClient(SparkS2CPayload.class, SparkS2CPayload::read);
+        toClient(NearbyObjectsS2CPayload.class, NearbyObjectsS2CPayload::read);
+
+        toServer(ApprovalAcceptC2SPayload.class, ApprovalAcceptC2SPayload::read, (payload, player) -> {
+            if (allowed(player)) {
+                BuildApproval.approveFor(player);
+            }
+        });
+        toServer(ApprovalDenyC2SPayload.class, ApprovalDenyC2SPayload::read, (payload, player) -> {
+            if (allowed(player)) {
+                BuildApproval.denyFor(player);
+            }
+        });
+        // The server's AI settings (and API key) are only changed by operators.
+        toServer(AiSettingsSyncC2SPayload.class, AiSettingsSyncC2SPayload::read, (payload, player) -> {
+            if (allowed(player)) {
+                applySettings(payload);
+            }
+        });
+        toServer(RemoveObjectC2SPayload.class, RemoveObjectC2SPayload::read, (payload, player) -> {
+            if (!allowed(player)) {
+                return;
+            }
+            if (payload.tag().isEmpty()) {
+                ObjectService.removeByEntity(player, payload.entityId());
+            } else {
+                ObjectService.removeByTag(player, payload.tag());
+            }
+        });
+        toServer(NearbyRequestC2SPayload.class, NearbyRequestC2SPayload::read, (payload, player) -> {
+            if (allowed(player)) {
+                ObjectService.sendNearby(player);
+            }
+        });
+        toServer(BreakObjectC2SPayload.class, BreakObjectC2SPayload::read,
+            (payload, player) -> io.github.foredayner.aibnf.ai.build.ObjectItems.breakObject(player, payload.entityId()));
+        // Using what was made is open to everyone: swinging an AI weapon plays its effect.
+        toServer(AttackSwingC2SPayload.class, AttackSwingC2SPayload::read,
+            (payload, player) -> io.github.foredayner.aibnf.ai.build.GearEffects.onSwing(player));
+        toServer(UndoC2SPayload.class, UndoC2SPayload::read, (payload, player) -> {
+            if (allowed(player)) {
+                UndoService.undo(player);
+            }
+        });
+        toServer(RebuildPartC2SPayload.class, RebuildPartC2SPayload::read, (payload, player) -> {
+            if (allowed(player)) {
+                RebuildService.receivePart(player, payload.id(), payload.index(), payload.total(),
+                    payload.mode(), payload.scalePercent(), payload.data());
+            }
+        });
     }
 
-    public static void registerServerReceivers() {
-        ServerPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.ApprovalAcceptC2SPayload.ID, (payload, context) -> {
-            context.server().execute(() -> {
-                if (allowed(context.player())) {
-                    BuildApproval.approveFor(context.player());
-                }
-            });
-        });
+    /** Send a message to one player's game. */
+    public static void send(ServerPlayer player, Msg message) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
+    }
 
-        ServerPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.ApprovalDenyC2SPayload.ID, (payload, context) -> {
-            context.server().execute(() -> {
-                if (allowed(context.player())) {
-                    BuildApproval.denyFor(context.player());
-                }
-            });
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.AiSettingsSyncC2SPayload.ID, (payload, context) -> {
-            context.server().execute(() -> {
-                // The server's AI settings (and API key) are only changed by operators.
-                if (allowed(context.player())) {
-                    applySettings(payload);
-                }
-            });
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.RemoveObjectC2SPayload.ID, (payload, context) -> {
-            context.server().execute(() -> {
-                if (!allowed(context.player())) {
-                    return;
-                }
-                if (payload.tag().isEmpty()) {
-                    ObjectService.removeByEntity(context.player(), payload.entityId());
-                } else {
-                    ObjectService.removeByTag(context.player(), payload.tag());
-                }
-            });
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.NearbyRequestC2SPayload.ID, (payload, context) -> {
-            context.server().execute(() -> {
-                if (allowed(context.player())) {
-                    ObjectService.sendNearby(context.player());
-                }
-            });
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.BreakObjectC2SPayload.ID, (payload, context) ->
-            context.server().execute(() -> io.github.foredayner.aibnf.ai.build.ObjectItems.breakObject(context.player(), payload.entityId())));
-        // Using what was made is open to everyone: swinging an AI weapon plays its effect.
-        ServerPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.AttackSwingC2SPayload.ID, (payload, context) ->
-            context.server().execute(() -> io.github.foredayner.aibnf.ai.build.GearEffects.onSwing(context.player())));
-        ServerPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.UndoC2SPayload.ID, (payload, context) -> {
-            context.server().execute(() -> {
-                if (allowed(context.player())) {
-                    UndoService.undo(context.player());
-                }
-            });
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.RebuildPartC2SPayload.ID, (payload, context) -> {
-            context.server().execute(() -> {
-                if (allowed(context.player())) {
-                    RebuildService.receivePart(context.player(), payload.id(), payload.index(), payload.total(),
-                        payload.mode(), payload.scalePercent(), payload.data());
-                }
-            });
-        });
+    /** True if this player's game has this mod (and can receive its messages). */
+    public static boolean canSend(ServerPlayer player) {
+        return player.connection != null && CHANNEL.isRemotePresent(player.connection.connection);
     }
 
     /** Permission level that may use the AI 공방 (requests, settings, 손에 받기, undo, removal). */
@@ -171,7 +204,7 @@ public final class AiNetworking {
 
         runOnServerThread(player, () -> {
             if (player.connection != null) {
-                ServerPlayNetworking.send(player, new AiNetworkPayloads.AiLogS2CPayload(message));
+                send(player, new AiNetworkPayloads.AiLogS2CPayload(message));
             }
         });
     }
@@ -179,7 +212,7 @@ public final class AiNetworking {
     public static void sendApprovalPending(ServerPlayer player, String description) {
         runOnServerThread(player, () -> {
             if (player.connection != null) {
-                ServerPlayNetworking.send(player, new AiNetworkPayloads.ApprovalPendingS2CPayload(description));
+                send(player, new AiNetworkPayloads.ApprovalPendingS2CPayload(description));
             }
         });
     }
@@ -187,7 +220,7 @@ public final class AiNetworking {
     public static void sendBuildComplete(ServerPlayer player, BuildRecord record) {
         runOnServerThread(player, () -> {
             if (player.connection != null) {
-                ServerPlayNetworking.send(player, new AiNetworkPayloads.BuildCompleteS2CPayload(record.toGzip()));
+                send(player, new AiNetworkPayloads.BuildCompleteS2CPayload(record.toGzip()));
             }
         });
     }
@@ -195,7 +228,7 @@ public final class AiNetworking {
     public static void sendNearby(ServerPlayer player, String json) {
         runOnServerThread(player, () -> {
             if (player.connection != null) {
-                ServerPlayNetworking.send(player, new AiNetworkPayloads.NearbyObjectsS2CPayload(json));
+                send(player, new AiNetworkPayloads.NearbyObjectsS2CPayload(json));
             }
         });
     }
@@ -203,7 +236,7 @@ public final class AiNetworking {
     public static void sendApprovalClear(ServerPlayer player) {
         runOnServerThread(player, () -> {
             if (player.connection != null) {
-                ServerPlayNetworking.send(player, new AiNetworkPayloads.ApprovalClearS2CPayload());
+                send(player, new AiNetworkPayloads.ApprovalClearS2CPayload());
             }
         });
     }

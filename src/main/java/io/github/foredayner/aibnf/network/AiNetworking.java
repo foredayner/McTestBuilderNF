@@ -139,7 +139,14 @@ public final class AiNetworking {
 
     /** Send a message to one player's game. */
     public static void send(ServerPlayer player, Msg message) {
-        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
+        if (connected(player)) {
+            CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
+        }
+    }
+
+    /** Fake players (game tests, other mods' machines) have no network connection to send on. */
+    private static boolean connected(ServerPlayer player) {
+        return player.connection != null && player.connection.connection != null && player.connection.connection.isConnected();
     }
 
     /** Players in this world within {@code range} blocks of a point (who should see an effect there). */
@@ -156,7 +163,7 @@ public final class AiNetworking {
 
     /** True if this player's game has this mod (and can receive its messages). */
     public static boolean canSend(ServerPlayer player) {
-        return player.connection != null && CHANNEL.isRemotePresent(player.connection.connection);
+        return connected(player) && CHANNEL.isRemotePresent(player.connection.connection);
     }
 
     /** Permission level that may use the AI 공방 (requests, settings, 손에 받기, undo, removal). */

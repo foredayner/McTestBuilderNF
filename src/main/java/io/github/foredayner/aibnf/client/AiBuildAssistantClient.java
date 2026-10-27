@@ -28,7 +28,7 @@ public class AiBuildAssistantClient {
                 net.minecraft.client.renderer.entity.NoopRenderer<io.github.foredayner.aibnf.content.SolidHitboxEntity>::new);
             event.registerEntityRenderer(io.github.foredayner.aibnf.content.AibContent.ARROW, AibArrowRenderer::new);
         });
-        modBus.addListener(WearRenderer::addLayers);
+        modBus.addListener((EntityRenderersEvent.AddLayers event) -> WearRenderer.addLayers(event));
         modBus.addListener((RegisterGuiOverlaysEvent event) -> event.registerAboveAll("object_breaking",
             (gui, graphics, partialTick, width, height) -> ObjectBreaking.renderHud(graphics)));
 
@@ -70,7 +70,7 @@ public class AiBuildAssistantClient {
             ObjectBreaking.tick(client);
             SparkRenderer.tick(client);
         });
-        MinecraftForge.EVENT_BUS.addListener(SparkRenderer::render);
+        MinecraftForge.EVENT_BUS.addListener((net.minecraftforge.client.event.RenderLevelStageEvent event) -> SparkRenderer.render(event));
     }
 
     private static KeyMapping REMOVE_OBJECT_KEY;

@@ -75,7 +75,9 @@ public final class SafeGroovyShellFactory {
         CompilerConfiguration configuration = new CompilerConfiguration();
         configuration.setScriptBaseClass(AiBuildScriptBase.class.getName());
         configuration.addCompilationCustomizers(buildSecureAstCustomizer());
-        return new GroovyShell(binding, configuration);
+        // Under Forge the mod's classes live in their own class loader; the script compiler must use
+        // it (not the thread's) to find the script base class and the ai.* API.
+        return new GroovyShell(SafeGroovyShellFactory.class.getClassLoader(), binding, configuration);
     }
 
     private static SecureASTCustomizer buildSecureAstCustomizer() {

@@ -13,7 +13,12 @@ public final class Boot {
     public static synchronized void minecraft() {
         if (!done) {
             SharedConstants.tryDetectVersion();
-            Bootstrap.bootStrap();
+            try {
+                Bootstrap.bootStrap();
+            } catch (ExceptionInInitializerError | RuntimeException exception) {
+                // Forge's bootstrap ends by setting up its network code, which needs the full mod
+                // loader. Vanilla's registries (blocks, items, states) are all ready by then.
+            }
             done = true;
         }
     }

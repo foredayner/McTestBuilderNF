@@ -40,7 +40,7 @@ jobs:
           out=$(mktemp -d)
           cp build.log gametest.log "$out/" 2>/dev/null || true
           cp -r build/test-results "$out/" 2>/dev/null || true
-          cp -r runs/gameTestServer/logs "$out/gametest-logs" 2>/dev/null || true
+          cp -r run/logs runs/gameTestServer/logs "$out/gametest-logs" 2>/dev/null || true
           cp -r runs/gameTestServer/crash-reports "$out/" 2>/dev/null || true
           cp build/libs/*.jar "$out/" 2>/dev/null || true
           echo "${GITHUB_SHA} ${GITHUB_REF_NAME} build=${{ steps.build.outcome }} gametest=${{ steps.gametest.outcome }}" > "$out/RUN.txt"

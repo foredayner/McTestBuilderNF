@@ -30,6 +30,31 @@ public class AibGameTests {
     /** An empty 16 x 8 x 16 area (data/aibuildassistantnf/structures/empty.nbt). */
     private static final String EMPTY_STRUCTURE = "empty";
 
+    /**
+     * A creative test player that joins the server like a real one. Vanilla 1.20.1's own mock
+     * player has no network channel, which Forge's join code needs, so it gets an in-memory one.
+     */
+    static ServerPlayer mockPlayer(GameTestHelper context) {
+        ServerLevel level = context.getLevel();
+        ServerPlayer player = new ServerPlayer(level.getServer(), level,
+            new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(), "test-mock-player")) {
+            @Override
+            public boolean isSpectator() {
+                return false;
+            }
+
+            @Override
+            public boolean isCreative() {
+                return true;
+            }
+        };
+        net.minecraft.network.Connection connection = new net.minecraft.network.Connection(
+            net.minecraft.network.protocol.PacketFlow.SERVERBOUND);
+        new io.netty.channel.embedded.EmbeddedChannel(connection);
+        level.getServer().getPlayerList().placeNewPlayer(connection, player);
+        return player;
+    }
+
     private static void check(boolean ok, String message) {
         if (!ok) {
             throw new GameTestAssertException(message);
@@ -37,7 +62,7 @@ public class AibGameTests {
     }
 
     private static ServerPlayer opPlayer(GameTestHelper context, BlockPos at, float yaw) {
-        ServerPlayer player = context.makeMockServerPlayerInLevel();
+        ServerPlayer player = mockPlayer(context);
         // The GameTest server gives new operators level 0; set level 4 directly.
         player.getServer().getPlayerList().getOps().add(
             new net.minecraft.server.players.ServerOpListEntry(player.getGameProfile(), 4, false));
@@ -459,7 +484,7 @@ public class AibGameTests {
 
     @GameTest(template = EMPTY_STRUCTURE)
     public static void onlyOperatorsCanUseTheWorkshop(GameTestHelper context) {
-        ServerPlayer guest = context.makeMockServerPlayerInLevel();
+        ServerPlayer guest = mockPlayer(context);
         check(!io.github.foredayner.aibnf.network.AiNetworking.allowed(guest), "a non-operator is turned away");
         ServerPlayer op = opPlayer(context, context.absolutePos(new BlockPos(1, 1, 1)), 0f);
         check(io.github.foredayner.aibnf.network.AiNetworking.allowed(op), "an operator may use it");

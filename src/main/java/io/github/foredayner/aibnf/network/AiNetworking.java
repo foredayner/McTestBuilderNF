@@ -142,6 +142,18 @@ public final class AiNetworking {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
     }
 
+    /** Players in this world within {@code range} blocks of a point (who should see an effect there). */
+    public static java.util.List<ServerPlayer> playersAround(net.minecraft.server.level.ServerLevel world,
+                                                             net.minecraft.world.phys.Vec3 at, double range) {
+        java.util.List<ServerPlayer> out = new java.util.ArrayList<>();
+        for (ServerPlayer p : world.players()) {
+            if (p.position().distanceToSqr(at) <= range * range) {
+                out.add(p);
+            }
+        }
+        return out;
+    }
+
     /** True if this player's game has this mod (and can receive its messages). */
     public static boolean canSend(ServerPlayer player) {
         return player.connection != null && CHANNEL.isRemotePresent(player.connection.connection);

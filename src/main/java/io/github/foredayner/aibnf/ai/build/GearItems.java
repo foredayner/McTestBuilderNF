@@ -4,13 +4,10 @@ import io.github.foredayner.aibnf.content.AibContent;
 import io.github.foredayner.aibnf.content.GearKind;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
-import net.minecraft.world.item.component.ItemLore;
 
 /**
  * Equipment as items: the stack carries the whole model (gzipped parts), so it looks right on any
@@ -56,22 +53,22 @@ public final class GearItems {
         if (!motion.isEmpty()) {
             nbt.putString(io.github.foredayner.aibnf.content.GearMotions.KEY, motion);
         }
-        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
-        stack.set(DataComponents.CUSTOM_NAME, Component.literal(RebuildService.title(record))
+        io.github.foredayner.aibnf.content.ItemData.put(stack, nbt);
+        io.github.foredayner.aibnf.content.ItemData.setName(stack, Component.literal(RebuildService.title(record))
             .setStyle(Style.EMPTY.withItalic(false).withColor(ChatFormatting.AQUA)));
         Style lore = Style.EMPTY.withItalic(false).withColor(ChatFormatting.GRAY);
-        stack.set(DataComponents.LORE, new ItemLore(List.of(
+        io.github.foredayner.aibnf.content.ItemData.setLore(stack, (List.of(
             Component.literal("AI 장비 · " + kind.korean + " (철 " + kind.korean + " 성능)").setStyle(lore))));
         return stack;
     }
 
     /** Decode the model on a gear stack, or null. */
     public static BuildPlan modelOf(ItemStack stack) {
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+        net.minecraft.nbt.CompoundTag data = io.github.foredayner.aibnf.content.ItemData.get(stack);
         if (data == null) {
             return null;
         }
-        byte[] bytes = data.copyTag().getByteArray(MODEL);
+        byte[] bytes = data.copy().getByteArray(MODEL);
         if (bytes.length == 0) {
             return null;
         }

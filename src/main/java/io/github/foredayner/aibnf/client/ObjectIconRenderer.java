@@ -4,54 +4,62 @@ import io.github.foredayner.aibnf.AiBuildAssistantMod;
 import io.github.foredayner.aibnf.ai.build.ObjectItems;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.serialization.MapCodec;
-import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 
 /**
  * Draws an object item as its own front picture (16 x 16, carried in the item), like a flat
  * item sprite: in the inventory, the hotbar, the hand and on the ground. Pixels are coloured
  * quads, so no texture has to be made at runtime.
  */
-public final class ObjectIconRenderer implements SpecialModelRenderer<int[]> {
+public final class ObjectIconRenderer {
 
-    public static final ResourceLocation TYPE_ID = ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "object_icon");
-    private static final ResourceLocation WHITE = ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "textures/misc/white.png");
+    private static final ResourceLocation WHITE = new ResourceLocation(AiBuildAssistantMod.MOD_ID, "textures/misc/white.png");
     private static final int N = BuildPreview.ICON;
     private static final int[] FALLBACK = fallback();
 
-    public record Unbaked() implements SpecialModelRenderer.Unbaked {
-        public static final MapCodec<io.github.foredayner.aibnf.client.ObjectIconRenderer.Unbaked> CODEC = MapCodec.unit(new io.github.foredayner.aibnf.client.ObjectIconRenderer.Unbaked());
+    /** Hooks this renderer up to the object item (Forge's item renderer extension). */
+    public static final net.minecraftforge.client.extensions.common.IClientItemExtensions EXTENSIONS =
+        new net.minecraftforge.client.extensions.common.IClientItemExtensions() {
+            private ItemRenderer renderer;
 
-        @Override
-        public SpecialModelRenderer<?> bake(EntityModelSet entityModels) {
-            return new ObjectIconRenderer();
+            @Override
+            public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                if (renderer == null) {
+                    renderer = new ItemRenderer();
+                }
+                return renderer;
+            }
+        };
+
+    private static final ObjectIconRenderer INSTANCE = new ObjectIconRenderer();
+
+    /** 1.20.1 draws items with a custom look through a "block entity without level" renderer. */
+    private static final class ItemRenderer extends net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer {
+        ItemRenderer() {
+            super(net.minecraft.client.Minecraft.getInstance().getBlockEntityRenderDispatcher(),
+                net.minecraft.client.Minecraft.getInstance().getEntityModels());
         }
 
         @Override
-        public MapCodec<? extends SpecialModelRenderer.Unbaked> type() {
-            return CODEC;
+        public void renderByItem(ItemStack stack, ItemDisplayContext mode, PoseStack matrices, MultiBufferSource buffers,
+                                 int light, int overlay) {
+            INSTANCE.render(INSTANCE.getData(stack), mode, matrices, buffers, light, overlay, false);
         }
     }
 
-    @Override
     public int[] getData(ItemStack stack) {
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+        net.minecraft.nbt.CompoundTag data = io.github.foredayner.aibnf.content.ItemData.get(stack);
         if (data == null) {
             return FALLBACK;
         }
-        int[] icon = data.copyTag().getIntArray(ObjectItems.ICON);
+        int[] icon = data.copy().getIntArray(ObjectItems.ICON);
         return icon.length == N * N ? icon : FALLBACK;
     }
 
-    @Override
     public void render(int[] icon, ItemDisplayContext mode, PoseStack matrices, MultiBufferSource vertexConsumers,
                        int light, int overlay, boolean glint) {
         int[] img = icon == null ? FALLBACK : icon;
@@ -87,7 +95,7 @@ public final class ObjectIconRenderer implements SpecialModelRenderer<int[]> {
             ? new float[][] { { x0, y0 }, { x1, y0 }, { x1, y1 }, { x0, y1 } }
             : new float[][] { { x1, y0 }, { x0, y0 }, { x0, y1 }, { x1, y1 } };
         for (float[] c : corners) {
-            b.addVertex(e, c[0], c[1], z).setColor(argb).setUv(0.5F, 0.5F).setOverlay(overlay).setLight(light).setNormal(e, 0, 0, nz);
+            Vtx.put(b, e, c[0], c[1], z, argb, 0.5F, 0.5F, overlay, light, 0, 0, nz);
         }
     }
 

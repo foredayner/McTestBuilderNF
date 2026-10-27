@@ -1,7 +1,8 @@
 package io.github.foredayner.aibnf.command;
 
 import io.github.foredayner.aibnf.ai.approval.BuildApproval;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraft.network.chat.Component;
 
 import static net.minecraft.commands.Commands.literal;
@@ -12,7 +13,8 @@ public final class AiApprovalCommands {
     }
 
     public static void register() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+        MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> {
+            var dispatcher = event.getDispatcher();
             dispatcher.register(
                 literal("ai-approve")
                     .executes(context -> {

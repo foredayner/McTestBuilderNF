@@ -98,7 +98,7 @@ public final class BlockIconHelper {
         }
 
         try {
-            return BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(normalized));
+            return BuiltInRegistries.BLOCK.get(ResourceLocation.parse(normalized));
         } catch (Exception exception) {
             return null;
         }

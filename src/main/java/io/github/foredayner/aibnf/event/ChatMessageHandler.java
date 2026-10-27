@@ -1,16 +1,15 @@
 package io.github.foredayner.aibnf.event;
 
-import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ServerChatEvent;
 
 public class ChatMessageHandler {
 
     public static void registerChatFilter() {
-        ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, params) -> {
-            String content = message.signedContent();
-            if (content.startsWith("/aibuild")) {
-                return false;
+        MinecraftForge.EVENT_BUS.addListener((ServerChatEvent event) -> {
+            if (event.getRawText().startsWith("/aibuild")) {
+                event.setCanceled(true);
             }
-            return true;
         });
     }
 }

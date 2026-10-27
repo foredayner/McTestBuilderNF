@@ -5,7 +5,6 @@ import io.github.foredayner.aibnf.ai.build.BuildPlan;
 import io.github.foredayner.aibnf.ai.build.GearItems;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.serialization.MapCodec;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -15,17 +14,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -35,9 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * model, which points up (+Y), is tilted like a sword sprite, so the game's hand-held
  * positions (first and third person) work for it. In inventories it is scaled to fit a slot.
  */
-public final class GearModelRenderer implements SpecialModelRenderer<GearModelRenderer.Model> {
-
-    public static final ResourceLocation TYPE_ID = ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "gear_model");
+public final class GearModelRenderer {
 
     /** A decoded model: parts with their textures, and its outline after the sword tilt. */
     public record Model(List<BuildPlan.Part> parts, List<TextureAtlasSprite> sprites, float[] tilted, boolean worn,
@@ -98,20 +91,6 @@ public final class GearModelRenderer implements SpecialModelRenderer<GearModelRe
         net.minecraft.world.entity.EquipmentSlot.HEAD, net.minecraft.world.entity.EquipmentSlot.CHEST,
         net.minecraft.world.entity.EquipmentSlot.MAINHAND, net.minecraft.world.entity.EquipmentSlot.OFFHAND };
 
-    public record Unbaked() implements SpecialModelRenderer.Unbaked {
-        public static final MapCodec<io.github.foredayner.aibnf.client.GearModelRenderer.Unbaked> CODEC = MapCodec.unit(new io.github.foredayner.aibnf.client.GearModelRenderer.Unbaked());
-
-        @Override
-        public SpecialModelRenderer<?> bake(EntityModelSet entityModels) {
-            return new GearModelRenderer();
-        }
-
-        @Override
-        public MapCodec<? extends SpecialModelRenderer.Unbaked> type() {
-            return CODEC;
-        }
-    }
-
     private static final float GRIP_X = 0.2F;
     private static final float GRIP_Y = 0.2F;
     private static final float TILT = (float) Math.toRadians(-45);
@@ -121,26 +100,21 @@ public final class GearModelRenderer implements SpecialModelRenderer<GearModelRe
     private static final float BOW_GRIP_Y = 0.69F;
 
     /** Decoded models by item data, so the gzip and JSON are read once per stack, not every frame. */
-    private static final Map<Integer, Map.Entry<WeakReference<CustomData>, Model>> CACHE = new LinkedHashMap<>(64, 0.75f, true) {
+    private static final Map<Integer, Map.Entry<WeakReference<net.minecraft.nbt.CompoundTag>, Model>> CACHE = new LinkedHashMap<>(64, 0.75f, true) {
         @Override
-        protected boolean removeEldestEntry(Map.Entry<Integer, Map.Entry<WeakReference<CustomData>, Model>> eldest) {
+        protected boolean removeEldestEntry(Map.Entry<Integer, Map.Entry<WeakReference<net.minecraft.nbt.CompoundTag>, Model>> eldest) {
             return size() > 64;
         }
     };
 
-    @Override
-    public Model extractArgument(ItemStack stack) {
-        return modelFor(stack);
-    }
-
     /** The decoded model on a gear stack (cached), or null. */
     public static Model modelFor(ItemStack stack) {
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+        net.minecraft.nbt.CompoundTag data = stack.getTag();
         if (data == null) {
             return null;
         }
         int key = System.identityHashCode(data);
-        Map.Entry<WeakReference<CustomData>, Model> hit = CACHE.get(key);
+        Map.Entry<WeakReference<net.minecraft.nbt.CompoundTag>, Model> hit = CACHE.get(key);
         if (hit != null && hit.getKey().get() == data) {
             return hit.getValue();
         }
@@ -216,12 +190,11 @@ public final class GearModelRenderer implements SpecialModelRenderer<GearModelRe
     private static TextureAtlasSprite spriteOf(String block) {
         String id = block.contains("[") ? block.substring(0, block.indexOf('[')) : block;
         ResourceLocation parsed = ResourceLocation.tryParse(id);
-        Block b = BuiltInRegistries.BLOCK.getValue(parsed == null ? ResourceLocation.withDefaultNamespace("stone") : parsed);
+        Block b = BuiltInRegistries.BLOCK.get(parsed == null ? new ResourceLocation("stone") : parsed);
         BlockState state = b.defaultBlockState();
         return Minecraft.getInstance().getModelManager().getBlockModelShaper().getParticleIcon(state);
     }
 
-    @Override
     public void render(Model model, ItemDisplayContext mode, PoseStack matrices, MultiBufferSource vertexConsumers,
                        int light, int overlay, boolean glint) {
         if (model == null || model.parts().isEmpty() || mode == ItemDisplayContext.HEAD) {
@@ -272,7 +245,7 @@ public final class GearModelRenderer implements SpecialModelRenderer<GearModelRe
         matrices.popPose();
     }
 
-    private static final ResourceLocation WHITE = ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "textures/misc/white.png");
+    private static final ResourceLocation WHITE = new ResourceLocation(AiBuildAssistantMod.MOD_ID, "textures/misc/white.png");
 
     /**
      * The aura: two see-through, shining shells around every piece (a small and a wider one),
@@ -319,8 +292,7 @@ public final class GearModelRenderer implements SpecialModelRenderer<GearModelRe
         }
         for (int[] f : FACES) {
             for (int k = 0; k < 4; k++) {
-                buffer.addVertex(e, corner[f[k]]).setColor(argb).setUv(0.5F, 0.5F).setOverlay(overlay).setLight(0xF000F0)
-                    .setNormal(e, f[4], f[5], f[6]);
+                Vtx.put(buffer, e, corner[f[k]], argb, 0.5F, 0.5F, overlay, 0xF000F0, f[4], f[5], f[6]);
             }
         }
         matrices.popPose();
@@ -352,7 +324,7 @@ public final class GearModelRenderer implements SpecialModelRenderer<GearModelRe
         if (client.level == null) {
             return System.currentTimeMillis() / 1000.0;
         }
-        return (client.level.getGameTime() + client.getDeltaTracker().getGameTimeDeltaPartialTick(true)) / 20.0;
+        return (client.level.getGameTime() + client.getFrameTime()) / 20.0;
     }
 
     /** Apply one movement to the matrix; returns the light to use (glow = full brightness). */
@@ -427,8 +399,7 @@ public final class GearModelRenderer implements SpecialModelRenderer<GearModelRe
             float v1 = v0 + (sprite.getV1() - v0) * Math.min(1, h);
             float[][] uv = { { u0, v1 }, { u1, v1 }, { u1, v0 }, { u0, v0 } };
             for (int k = 0; k < 4; k++) {
-                buffer.addVertex(e, corner[f[k]]).setColor(0xFFFFFFFF).setUv(uv[k][0], uv[k][1]).setOverlay(overlay).setLight(light)
-                    .setNormal(e, f[4], f[5], f[6]);
+                Vtx.put(buffer, e, corner[f[k]], 0xFFFFFFFF, uv[k][0], uv[k][1], overlay, light, f[4], f[5], f[6]);
             }
         }
         matrices.popPose();

@@ -1,9 +1,7 @@
 package io.github.foredayner.aibnf.content;
 
 import java.util.List;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 
 /**
  * Attack motions a sword can be ordered with (공격 모션). Only the look of the swing changes
@@ -35,10 +33,10 @@ public final class GearMotions {
 
     /** The motion stored on a stack, or "". */
     public static String of(ItemStack stack) {
-        CustomData data = stack == null ? null : stack.get(DataComponents.CUSTOM_DATA);
+        net.minecraft.nbt.CompoundTag data = io.github.foredayner.aibnf.content.ItemData.get(stack == null ? null : stack);
         if (data == null || !data.contains(KEY)) {
             return "";
         }
-        return normalize(data.copyTag().getString(KEY));
+        return normalize(data.copy().getString(KEY));
     }
 }

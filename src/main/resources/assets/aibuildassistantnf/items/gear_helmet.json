@@ -1,9 +1,0 @@
-{
-  "model": {
-    "type": "minecraft:special",
-    "base": "aibuildassistantnf:item/gear",
-    "model": {
-      "type": "aibuildassistantnf:gear_model"
-    }
-  }
-}

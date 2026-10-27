@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 /**
  * An AI-made object as an item. Right-click the top of a block to set it there (facing you);
@@ -35,5 +36,10 @@ public class ObjectItem extends Item {
             return InteractionResult.PASS;
         }
         return ObjectItems.use(player, context.getItemInHand(), context.getClickedPos()) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+    }
+
+    @Override
+    public void initializeClient(java.util.function.Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(io.github.foredayner.aibnf.client.ObjectIconRenderer.EXTENSIONS);
     }
 }

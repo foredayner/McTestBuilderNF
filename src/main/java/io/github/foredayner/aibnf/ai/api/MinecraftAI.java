@@ -1134,7 +1134,7 @@ public class MinecraftAI {
         String id = normalizeBlockId(blockName);
         
         try {
-            Block block = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(id));
+            Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(id));
             if (block == Blocks.AIR && !id.equals("minecraft:air") && !id.equals("air")) {
                 return Blocks.STONE;
             }

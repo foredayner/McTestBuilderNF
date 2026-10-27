@@ -3,16 +3,13 @@ package io.github.foredayner.aibnf.ai.build;
 import io.github.foredayner.aibnf.content.GearItem;
 import io.github.foredayner.aibnf.content.GearKind;
 import io.github.foredayner.aibnf.network.AiNetworkPayloads;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.core.component.DataComponents;
+import io.github.foredayner.aibnf.network.AiNetworking;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,11 +40,11 @@ public final class GearEffects {
 
     /** The effects stored on a stack (empty if none). */
     public static Spark.Effects of(ItemStack stack) {
-        CustomData data = stack == null ? null : stack.get(DataComponents.CUSTOM_DATA);
+        net.minecraft.nbt.CompoundTag data = io.github.foredayner.aibnf.content.ItemData.get(stack == null ? null : stack);
         if (data == null || !data.contains(KEY)) {
             return new Spark.Effects();
         }
-        return Spark.Effects.fromJson(data.copyTag().getString(KEY));
+        return Spark.Effects.fromJson(data.copy().getString(KEY));
     }
 
     /** Last swing effect per player (server ticks), so a modified client cannot flood effects. */
@@ -104,7 +101,7 @@ public final class GearEffects {
                 case "above" -> at.add(0, 1.5, 0);
                 default -> at;
             };
-            send(world, o, dir, s, 1, PlayerLookup.around(world, at, 64));
+            send(world, o, dir, s, 1, AiNetworking.playersAround(world, at, 64));
         }
         return fx.attack.size();
     }
@@ -116,7 +113,7 @@ public final class GearEffects {
         flat = flat.lengthSqr() < 1e-6 ? new Vec3(0, 0, 1) : flat.normalize();
         Vec3 targetCenter = target != null ? target.position().add(0, target.getBbHeight() * 0.5, 0) : eye.add(look.scale(2.5));
         Vec3 targetFeet = target != null ? target.position() : wielder.position().add(flat.scale(2.5));
-        List<ServerPlayer> viewers = new ArrayList<>(PlayerLookup.tracking(wielder));
+        List<ServerPlayer> viewers = new ArrayList<>(AiNetworking.playersAround((ServerLevel) wielder.level(), wielder.position(), 96));
         if (wielder instanceof ServerPlayer self && !viewers.contains(self)) {
             viewers.add(self);
         }
@@ -137,8 +134,8 @@ public final class GearEffects {
         AiNetworkPayloads.SparkS2CPayload payload = new AiNetworkPayloads.SparkS2CPayload("[" + spark.toJson() + "]",
             at.x, at.y, at.z, (float) dir.x, (float) dir.y, (float) dir.z, (float) scale);
         for (ServerPlayer p : to) {
-            if (p.serverLevel() == world && ServerPlayNetworking.canSend(p, AiNetworkPayloads.SparkS2CPayload.ID)) {
-                ServerPlayNetworking.send(p, payload);
+            if (p.serverLevel() == world && AiNetworking.canSend(p)) {
+                AiNetworking.send(p, payload);
             }
         }
     }

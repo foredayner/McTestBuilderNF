@@ -1,21 +1,23 @@
 package io.github.foredayner.aibnf.client;
 
-import io.github.foredayner.aibnf.content.AibContent;
-import io.github.foredayner.aibnf.content.GearKind;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Draws worn AI equipment (helmets, hats, armour, back items) on players, zombies, armour stands
@@ -23,25 +25,50 @@ import java.util.List;
  *
  * <p>The AI designs with +Y up; entity models have +Y down, so the model is flipped on Y (which
  * also turns its faces inside out, hence a no-cull layer).
+ *
+ * <p>1.21 (Fabric) hooks this in as an armour renderer; 1.20.1 (Forge) adds it as an extra layer
+ * to every renderer that draws a humanoid model.
  */
-public final class WearRenderer implements ArmorRenderer {
+public final class WearRenderer<T extends LivingEntity, M extends HumanoidModel<T>> extends RenderLayer<T, M> {
 
-    private WearRenderer() {
+    private static final EquipmentSlot[] SLOTS = { EquipmentSlot.HEAD, EquipmentSlot.CHEST };
+
+    public WearRenderer(RenderLayerParent<T, M> parent) {
+        super(parent);
     }
 
-    public static void register() {
-        List<Item> worn = new ArrayList<>();
-        for (GearKind kind : GearKind.values()) {
-            if (kind.worn()) {
-                worn.add(AibContent.GEAR.get(kind));
+    /** Adds the layer to every player skin and every entity renderer with a humanoid model. */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static void addLayers(EntityRenderersEvent.AddLayers event) {
+        for (String skin : event.getSkins()) {
+            LivingEntityRenderer renderer = event.getSkin(skin);
+            if (renderer != null) {
+                renderer.addLayer(new WearRenderer(renderer));
             }
         }
-        ArmorRenderer.register(new WearRenderer(), worn.toArray(new Item[0]));
+        for (EntityType<?> type : ForgeRegistries.ENTITY_TYPES.getValues()) {
+            EntityRenderer<?> renderer;
+            try {
+                renderer = event.getEntityRenderer((EntityType) type);
+            } catch (ClassCastException exception) {
+                continue;
+            }
+            if (renderer instanceof LivingEntityRenderer living && living.getModel() instanceof HumanoidModel) {
+                living.addLayer(new WearRenderer(living));
+            }
+        }
     }
 
     @Override
-    public void render(PoseStack matrices, MultiBufferSource vertexConsumers, ItemStack stack, HumanoidRenderState state,
-                       EquipmentSlot slot, int light, HumanoidModel<HumanoidRenderState> contextModel) {
+    public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbSwing,
+                       float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
+        for (EquipmentSlot slot : SLOTS) {
+            renderSlot(matrices, vertexConsumers, entity.getItemBySlot(slot), slot, light, getParentModel());
+        }
+    }
+
+    private static void renderSlot(PoseStack matrices, MultiBufferSource vertexConsumers, ItemStack stack, EquipmentSlot slot,
+                                   int light, HumanoidModel<?> contextModel) {
         if (!(stack.getItem() instanceof io.github.foredayner.aibnf.content.GearItem gear) || gear.kind().slot != slot) {
             return;
         }

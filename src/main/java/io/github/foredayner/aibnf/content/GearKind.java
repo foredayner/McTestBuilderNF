@@ -36,7 +36,7 @@ public enum GearKind {
     SPEAR("창", Items.IRON_SWORD, Items.TRIDENT,
         "a long thin shaft (1.6-2.4) going up, a pointed head (0.25-0.45 long) on top, maybe a binding or tassel "
             + "under the head."),
-    HAMMER("망치", Items.IRON_AXE, Items.MACE,
+    HAMMER("망치", Items.IRON_AXE, Items.ANVIL,
         "a handle 0.9-1.4 long going up (a war hammer 1.6-2.8); at the top a heavy head across X (0.4-0.7 wide, a "
             + "war hammer 0.8-1.6; 0.2-0.6 tall and deep)."),
     STAFF("지팡이", Items.IRON_SWORD, Items.BLAZE_ROD,

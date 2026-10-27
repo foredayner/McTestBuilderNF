@@ -3,7 +3,6 @@ package io.github.foredayner.aibnf.ai.build;
 import io.github.foredayner.aibnf.ai.api.MinecraftAI;
 import io.github.foredayner.aibnf.network.AiNetworking;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -11,8 +10,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.CustomData;
-import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.storage.LevelResource;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -43,11 +40,11 @@ public final class BlueprintStore {
         if (stack == null || !stack.is(Items.PAPER)) {
             return null;
         }
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+        net.minecraft.nbt.CompoundTag data = io.github.foredayner.aibnf.content.ItemData.get(stack);
         if (data == null) {
             return null;
         }
-        CompoundTag nbt = data.copyTag();
+        CompoundTag nbt = data.copy();
         if (!nbt.contains(KEY)) {
             return null;
         }
@@ -104,18 +101,18 @@ public final class BlueprintStore {
         ItemStack paper = new ItemStack(Items.PAPER);
         CompoundTag nbt = new CompoundTag();
         nbt.putString(KEY, record.id);
-        paper.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
+        io.github.foredayner.aibnf.content.ItemData.put(paper, nbt);
         boolean object = "object".equals(record.kind);
         String title = RebuildService.title(record);
-        paper.set(DataComponents.CUSTOM_NAME, Component.literal((object ? "소품 설계도: " : "건물 설계도: ") + title)
+        io.github.foredayner.aibnf.content.ItemData.setName(paper, Component.literal((object ? "소품 설계도: " : "건물 설계도: ") + title)
             .setStyle(Style.EMPTY.withItalic(false).withColor(ChatFormatting.GOLD)));
         int[] b = record.plan.bounds();
         Style lore = Style.EMPTY.withItalic(false).withColor(ChatFormatting.GRAY);
-        paper.set(DataComponents.LORE, new ItemLore(List.of(
+        io.github.foredayner.aibnf.content.ItemData.setLore(paper, (List.of(
             Component.literal("크기 " + (b[3] - b[0] + 1) + " × " + (b[4] - b[1] + 1) + " × " + (b[5] - b[2] + 1)).setStyle(lore),
             Component.literal("블록 윗면을 우클릭하면 그 위에").setStyle(lore),
             Component.literal("앞면 가운데를 맞춰 지어집니다").setStyle(lore))));
-        paper.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+        io.github.foredayner.aibnf.content.ItemData.setGlint(paper);
         return paper;
     }
 

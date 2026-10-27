@@ -1,7 +1,8 @@
 package io.github.foredayner.aibnf.ai.build;
 
 import io.github.foredayner.aibnf.config.AiBuilderConfig;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.ArrayDeque;
@@ -33,9 +34,11 @@ public final class BuildTaskQueue {
     }
 
     public static void register() {
-        ServerTickEvents.END_SERVER_TICK.register(activeServer -> {
-            server = activeServer;
-            tick();
+        MinecraftForge.EVENT_BUS.addListener((TickEvent.ServerTickEvent event) -> {
+            if (event.phase == TickEvent.Phase.END) {
+                server = event.getServer();
+                tick();
+            }
         });
     }
 

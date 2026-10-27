@@ -7,20 +7,19 @@ import io.github.foredayner.aibnf.content.AibArrowEntity;
 import io.github.foredayner.aibnf.content.GearItem;
 import io.github.foredayner.aibnf.content.GearKind;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -39,7 +38,7 @@ import java.util.WeakHashMap;
  */
 public final class SparkRenderer {
 
-    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "textures/misc/spark.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(AiBuildAssistantMod.MOD_ID, "textures/misc/spark.png");
     private static final int MAX_EFFECTS = 160;
     private static final int MAX_DOTS_PER_FRAME = 9000;
     private static final double RANGE = 48;
@@ -72,7 +71,7 @@ public final class SparkRenderer {
     private static final List<Effect> EFFECTS = new ArrayList<>();
     /** Following effects by "entity id / slot / index", kept while the equipment stays on. */
     private static final Map<String, Effect> FOLLOWING = new HashMap<>();
-    private static final Map<CustomData, Spark.Effects> CACHE = new WeakHashMap<>();
+    private static final TagCache<Spark.Effects> CACHE = new TagCache<>(256);
 
     private SparkRenderer() {
     }
@@ -97,18 +96,18 @@ public final class SparkRenderer {
     }
 
     private static double now(Minecraft client) {
-        return client.level.getGameTime() + client.getDeltaTracker().getGameTimeDeltaPartialTick(true);
+        return client.level.getGameTime() + client.getFrameTime();
     }
 
     private static Spark.Effects effectsOf(ItemStack stack) {
         if (stack.isEmpty() || !(stack.getItem() instanceof GearItem)) {
             return null;
         }
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+        net.minecraft.nbt.CompoundTag data = stack.getTag();
         if (data == null || !data.contains(GearEffects.KEY)) {
             return null;
         }
-        return CACHE.computeIfAbsent(data, d -> GearEffects.of(stack));
+        return CACHE.get(data, () -> GearEffects.of(stack));
     }
 
     private static final EquipmentSlot[] SLOTS = { EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND, EquipmentSlot.HEAD, EquipmentSlot.CHEST };
@@ -220,17 +219,23 @@ public final class SparkRenderer {
 
     // ------------------------------------------------------------------ drawing
 
-    public static void render(WorldRenderContext context) {
+    /** Drawn right after the entities (Forge's level render stage event). */
+    public static void render(RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_ENTITIES) {
+            return;
+        }
         Minecraft client = Minecraft.getInstance();
         if (client.level == null || EFFECTS.isEmpty()) {
             return;
         }
-        Camera camera = context.camera();
+        // In 1.20.1 the level's pose stack holds the camera turn; positions below are camera-relative.
+        PoseStack.Pose pose = event.getPoseStack().last();
+        Camera camera = event.getCamera();
         Vec3 cam = camera.getPosition();
         Quaternionf rot = camera.rotation();
         Vector3f camRight = rot.transform(new Vector3f(1, 0, 0));
         Vector3f camUp = rot.transform(new Vector3f(0, 1, 0));
-        float delta = client.getDeltaTracker().getGameTimeDeltaPartialTick(true);
+        float delta = client.getFrameTime();
         double now = client.level.getGameTime() + delta;
         MultiBufferSource.BufferSource immediate = client.renderBuffers().bufferSource();
         RenderType layer = RenderType.entityTranslucentEmissive(TEXTURE);
@@ -254,7 +259,7 @@ public final class SparkRenderer {
                 e.dir = lookOf(e.follow);
                 t = t - Math.floor(t);
             }
-            budget -= draw(buffer, e, t, age / 20.0, cam, camRight, camUp, budget);
+            budget -= draw(buffer, pose, e, t, age / 20.0, cam, camRight, camUp, budget);
             if (budget <= 0) {
                 break;
             }
@@ -263,7 +268,7 @@ public final class SparkRenderer {
     }
 
     /** Draws one effect at life fraction t (0-1), age in seconds; returns the dots drawn. */
-    private static int draw(VertexConsumer buffer, Effect e, double t, double seconds, Vec3 cam, Vector3f camRight, Vector3f camUp,
+    private static int draw(VertexConsumer buffer, PoseStack.Pose pose, Effect e, double t, double seconds, Vec3 cam, Vector3f camRight, Vector3f camUp,
                             int budget) {
         Spark s = e.spark;
         List<String> m = s.moves;
@@ -365,22 +370,18 @@ public final class SparkRenderer {
                 continue;
             }
             int argb = ((int) (a * 255) << 24) | rgb;
-            quad(buffer, (float) (x - cam.x), (float) (y - cam.y), (float) (z - cam.z), (float) half, camRight, camUp, argb);
+            quad(buffer, pose, (float) (x - cam.x), (float) (y - cam.y), (float) (z - cam.z), (float) half, camRight, camUp, argb);
             drawn++;
         }
         return drawn;
     }
 
-    private static void quad(VertexConsumer b, float x, float y, float z, float h, Vector3f r, Vector3f u, int argb) {
+    private static void quad(VertexConsumer b, PoseStack.Pose pose, float x, float y, float z, float h, Vector3f r, Vector3f u, int argb) {
         float rx = r.x * h, ry = r.y * h, rz = r.z * h, ux = u.x * h, uy = u.y * h, uz = u.z * h;
-        b.addVertex(x - rx - ux, y - ry - uy, z - rz - uz).setColor(argb).setUv(0, 1).setOverlay(OverlayTexture.NO_OVERLAY).setLight(0xF000F0)
-            .setNormal(0, 1, 0);
-        b.addVertex(x + rx - ux, y + ry - uy, z + rz - uz).setColor(argb).setUv(1, 1).setOverlay(OverlayTexture.NO_OVERLAY).setLight(0xF000F0)
-            .setNormal(0, 1, 0);
-        b.addVertex(x + rx + ux, y + ry + uy, z + rz + uz).setColor(argb).setUv(1, 0).setOverlay(OverlayTexture.NO_OVERLAY).setLight(0xF000F0)
-            .setNormal(0, 1, 0);
-        b.addVertex(x - rx + ux, y - ry + uy, z - rz + uz).setColor(argb).setUv(0, 0).setOverlay(OverlayTexture.NO_OVERLAY).setLight(0xF000F0)
-            .setNormal(0, 1, 0);
+        Vtx.put(b, pose, x - rx - ux, y - ry - uy, z - rz - uz, argb, 0, 1, OverlayTexture.NO_OVERLAY, 0xF000F0, 0, 1, 0);
+        Vtx.put(b, pose, x + rx - ux, y + ry - uy, z + rz - uz, argb, 1, 1, OverlayTexture.NO_OVERLAY, 0xF000F0, 0, 1, 0);
+        Vtx.put(b, pose, x + rx + ux, y + ry + uy, z + rz + uz, argb, 1, 0, OverlayTexture.NO_OVERLAY, 0xF000F0, 0, 1, 0);
+        Vtx.put(b, pose, x - rx + ux, y - ry + uy, z - rz + uz, argb, 0, 0, OverlayTexture.NO_OVERLAY, 0xF000F0, 0, 1, 0);
     }
 
     private static int lerpColor(int a, int b, double t) {

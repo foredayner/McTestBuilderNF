@@ -7,7 +7,6 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -18,8 +17,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
-import net.minecraft.world.item.component.ItemLore;
 
 /**
  * Objects as items: handing one out, setting it down on a block, and mining it back.
@@ -47,12 +44,12 @@ public final class ObjectItems {
         if (record.icon != null && record.icon.length == 16 * 16) {
             nbt.putIntArray(ICON, record.icon);
         }
-        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
-        stack.set(DataComponents.CUSTOM_NAME, Component.literal(RebuildService.title(record))
+        io.github.foredayner.aibnf.content.ItemData.put(stack, nbt);
+        io.github.foredayner.aibnf.content.ItemData.setName(stack, Component.literal(RebuildService.title(record))
             .setStyle(Style.EMPTY.withItalic(false).withColor(ChatFormatting.WHITE)));
         double[] b = record.plan.partBounds();
         Style lore = Style.EMPTY.withItalic(false).withColor(ChatFormatting.GRAY);
-        stack.set(DataComponents.LORE, new ItemLore(List.of(
+        io.github.foredayner.aibnf.content.ItemData.setLore(stack, (List.of(
             Component.literal(String.format(Locale.ROOT, "AI 소품 · 크기 %.1f × %.1f × %.1f", b[3] - b[0], b[4] - b[1], b[5] - b[2])).setStyle(lore),
             Component.literal("블록 윗면을 우클릭하면 그 위에 놓여요").setStyle(lore),
             Component.literal("돌처럼 캐면 다시 아이템이 돼요").setStyle(lore))));
@@ -64,11 +61,11 @@ public final class ObjectItems {
         if (stack == null || AibContent.OBJECT_ITEM == null || !stack.is(AibContent.OBJECT_ITEM)) {
             return null;
         }
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+        net.minecraft.nbt.CompoundTag data = io.github.foredayner.aibnf.content.ItemData.get(stack);
         if (data == null) {
             return null;
         }
-        String id = data.copyTag().getString(KEY);
+        String id = data.copy().getString(KEY);
         return ID.matcher(id).matches() ? id : null;
     }
 

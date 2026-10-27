@@ -2,56 +2,58 @@ package io.github.foredayner.aibnf.client;
 
 import io.github.foredayner.aibnf.client.network.AiClientNetworking;
 import io.github.foredayner.aibnf.config.AiBuilderConfig;
-import io.github.foredayner.aibnf.network.AiNetworking;
 import com.mojang.blaze3d.platform.InputConstants;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import org.lwjgl.glfw.GLFW;
 
-public class AiBuildAssistantClient implements ClientModInitializer {
+/** The player's game: keys, screens, renderers and the messages the server sends. */
+public class AiBuildAssistantClient {
 
     private static KeyMapping OPEN_AI_UI_KEY;
 
-    @Override
-    public void onInitializeClient() {
-        AiBuilderConfig.load();
-        AiNetworking.registerPayloads();
+    /** Called from the mod's constructor, on the player's game only. */
+    public static void init(IEventBus modBus) {
         AiClientNetworking.registerReceivers();
 
-        // Solid object hitboxes are invisible; object items draw their own picture.
-        net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(
-            io.github.foredayner.aibnf.content.AibContent.HITBOX, net.minecraft.client.renderer.entity.NoopRenderer::new);
-        net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(
-            io.github.foredayner.aibnf.content.AibContent.ARROW, AibArrowRenderer::new);
-        net.minecraft.client.renderer.special.SpecialModelRenderers.ID_MAPPER.put(
-            ObjectIconRenderer.TYPE_ID, ObjectIconRenderer.Unbaked.CODEC);
-        net.minecraft.client.renderer.special.SpecialModelRenderers.ID_MAPPER.put(
-            GearModelRenderer.TYPE_ID, GearModelRenderer.Unbaked.CODEC);
-        WearRenderer.register();
-        net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback.EVENT.register(
-            (context, tickCounter) -> ObjectBreaking.renderHud(context));
+        modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
+            // Solid object hitboxes are invisible; object items draw their own picture.
+            event.registerEntityRenderer(io.github.foredayner.aibnf.content.AibContent.HITBOX,
+                net.minecraft.client.renderer.entity.NoopRenderer::new);
+            event.registerEntityRenderer(io.github.foredayner.aibnf.content.AibContent.ARROW, AibArrowRenderer::new);
+        });
+        modBus.addListener(WearRenderer::addLayers);
+        modBus.addListener((RegisterGuiOverlaysEvent event) -> event.registerAboveAll("object_breaking",
+            (gui, graphics, partialTick, width, height) -> ObjectBreaking.renderHud(graphics)));
 
-        OPEN_AI_UI_KEY = KeyBindingHelper.registerKeyBinding(
-            new KeyMapping(
-                "key.aibuildassistantnf.open_ai_ui",
-                InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_O,
-                "key.categories.misc"
-            )
+        OPEN_AI_UI_KEY = new KeyMapping(
+            "key.aibuildassistantnf.open_ai_ui",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_O,
+            "key.categories.misc"
         );
-
-        REMOVE_OBJECT_KEY = KeyBindingHelper.registerKeyBinding(
-            new KeyMapping(
-                "key.aibuildassistantnf.remove_object",
-                InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_DELETE,
-                "key.categories.misc"
-            )
+        REMOVE_OBJECT_KEY = new KeyMapping(
+            "key.aibuildassistantnf.remove_object",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_DELETE,
+            "key.categories.misc"
         );
+        modBus.addListener((RegisterKeyMappingsEvent event) -> {
+            event.register(OPEN_AI_UI_KEY);
+            event.register(REMOVE_OBJECT_KEY);
+        });
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
+            if (event.phase != TickEvent.Phase.END) {
+                return;
+            }
+            Minecraft client = Minecraft.getInstance();
             while (OPEN_AI_UI_KEY.consumeClick()) {
                 if (!isOperator(client)) {
                     continue;
@@ -68,7 +70,7 @@ public class AiBuildAssistantClient implements ClientModInitializer {
             ObjectBreaking.tick(client);
             SparkRenderer.tick(client);
         });
-        net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents.AFTER_ENTITIES.register(SparkRenderer::render);
+        MinecraftForge.EVENT_BUS.addListener(SparkRenderer::render);
     }
 
     private static KeyMapping REMOVE_OBJECT_KEY;

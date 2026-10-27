@@ -3,7 +3,8 @@ package io.github.foredayner.aibnf.command;
 import io.github.foredayner.aibnf.ai.AiController;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 
@@ -14,7 +15,8 @@ public class AiBuildCommand {
 
     public static void register() {
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+        MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> {
+            var dispatcher = event.getDispatcher();
 
             dispatcher.register(
                 literal("aibuild")

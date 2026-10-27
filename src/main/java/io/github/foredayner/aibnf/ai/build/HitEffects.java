@@ -1,6 +1,7 @@
 package io.github.foredayner.aibnf.ai.build;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 
 /**
  * Older versions drew the magic circle hit effect with glowing display pieces tagged
@@ -15,9 +16,9 @@ public final class HitEffects {
     }
 
     public static void register() {
-        ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-            if (entity.getTags().contains(TAG)) {
-                entity.discard();
+        MinecraftForge.EVENT_BUS.addListener((EntityJoinLevelEvent event) -> {
+            if (!event.getLevel().isClientSide() && event.getEntity().getTags().contains(TAG)) {
+                event.setCanceled(true);
             }
         });
     }

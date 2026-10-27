@@ -7,84 +7,81 @@ import io.github.foredayner.aibnf.client.BuildHistory;
 import io.github.foredayner.aibnf.config.AiBuilderConfig;
 import io.github.foredayner.aibnf.config.ForbiddenBlockRegistry;
 import io.github.foredayner.aibnf.network.AiNetworkPayloads;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import io.github.foredayner.aibnf.network.AiNetworking;
+import java.util.function.Consumer;
 
 public final class AiClientNetworking {
 
     private AiClientNetworking() {
     }
 
+    /** Messages are handled on the game thread already (see AiNetworking). */
+    @SuppressWarnings("unchecked")
+    private static <M> void on(Class<M> type, Consumer<M> handler) {
+        AiNetworking.CLIENT_HANDLERS.put(type, msg -> handler.accept((M) msg));
+    }
+
     public static void registerReceivers() {
-        ClientPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.AiLogS2CPayload.ID, (payload, context) -> {
-            context.client().execute(() -> AiClientState.addLog(payload.message()));
-        });
+        on(AiNetworkPayloads.AiLogS2CPayload.class, payload -> AiClientState.addLog(payload.message()));
 
-        ClientPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.ApprovalPendingS2CPayload.ID, (payload, context) -> {
-            context.client().execute(() -> {
-                AiClientState.setPendingApproval(payload.description());
-                AiClientState.addLog("[AI] Approval required.");
-                for (String line : payload.description().split("\n")) {
-                    if (!line.isEmpty()) {
-                        AiClientState.addLog("  " + line);
-                    }
+        on(AiNetworkPayloads.ApprovalPendingS2CPayload.class, payload -> {
+            AiClientState.setPendingApproval(payload.description());
+            AiClientState.addLog("[AI] Approval required.");
+            for (String line : payload.description().split("\n")) {
+                if (!line.isEmpty()) {
+                    AiClientState.addLog("  " + line);
                 }
-            });
+            }
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.ApprovalClearS2CPayload.ID, (payload, context) -> {
-            context.client().execute(AiClientState::clearPendingApproval);
-        });
+        on(AiNetworkPayloads.ApprovalClearS2CPayload.class, payload -> AiClientState.clearPendingApproval());
 
-        ClientPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.SparkS2CPayload.ID, (payload, context) ->
-            context.client().execute(() -> io.github.foredayner.aibnf.client.SparkRenderer.play(payload.sparks(),
-                new net.minecraft.world.phys.Vec3(payload.x(), payload.y(), payload.z()),
-                new net.minecraft.world.phys.Vec3(payload.dx(), payload.dy(), payload.dz()), payload.scale())));
+        on(AiNetworkPayloads.SparkS2CPayload.class, payload -> io.github.foredayner.aibnf.client.SparkRenderer.play(payload.sparks(),
+            new net.minecraft.world.phys.Vec3(payload.x(), payload.y(), payload.z()),
+            new net.minecraft.world.phys.Vec3(payload.dx(), payload.dy(), payload.dz()), payload.scale()));
 
-        ClientPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.NearbyObjectsS2CPayload.ID, (payload, context) -> {
-            context.client().execute(() -> AiClientState.setNearby(payload.json()));
-        });
+        on(AiNetworkPayloads.NearbyObjectsS2CPayload.class, payload -> AiClientState.setNearby(payload.json()));
 
-        ClientPlayNetworking.registerGlobalReceiver(AiNetworkPayloads.BuildCompleteS2CPayload.ID, (payload, context) -> {
-            context.client().execute(() -> {
-                try {
-                    BuildRecord record = BuildRecord.fromGzip(payload.data());
-                    BuildHistory.save(record);
-                    AiClientState.addLog("[History] 보관함에 추가했어요. 보관함에서 \"손에 받기\"로 꺼내 쓰세요.");
-                } catch (RuntimeException exception) {
-                    AiClientState.addLog("[History] Could not save this build: " + exception.getMessage());
-                }
-            });
+        on(AiNetworkPayloads.BuildCompleteS2CPayload.class, payload -> {
+            try {
+                BuildRecord record = BuildRecord.fromGzip(payload.data());
+                BuildHistory.save(record);
+                AiClientState.addLog("[History] 보관함에 추가했어요. 보관함에서 \"손에 받기\"로 꺼내 쓰세요.");
+            } catch (RuntimeException exception) {
+                AiClientState.addLog("[History] Could not save this build: " + exception.getMessage());
+            }
         });
     }
 
     public static void sendApprovalAction(boolean approve) {
         if (approve) {
-            ClientPlayNetworking.send(new AiNetworkPayloads.ApprovalAcceptC2SPayload());
+            AiNetworking.CHANNEL.sendToServer(new AiNetworkPayloads.ApprovalAcceptC2SPayload());
         } else {
-            ClientPlayNetworking.send(new AiNetworkPayloads.ApprovalDenyC2SPayload());
+            AiNetworking.CHANNEL.sendToServer(new AiNetworkPayloads.ApprovalDenyC2SPayload());
         }
     }
 
     public static void sendRemoveObject(int entityId, String tag) {
-        ClientPlayNetworking.send(new AiNetworkPayloads.RemoveObjectC2SPayload(entityId, tag == null ? "" : tag));
+        AiNetworking.CHANNEL.sendToServer(new AiNetworkPayloads.RemoveObjectC2SPayload(entityId, tag == null ? "" : tag));
     }
 
     public static void requestNearby() {
-        ClientPlayNetworking.send(new AiNetworkPayloads.NearbyRequestC2SPayload());
+        AiNetworking.CHANNEL.sendToServer(new AiNetworkPayloads.NearbyRequestC2SPayload());
     }
 
     public static void sendBreak(int entityId) {
-        ClientPlayNetworking.send(new AiNetworkPayloads.BreakObjectC2SPayload(entityId));
+        AiNetworking.CHANNEL.sendToServer(new AiNetworkPayloads.BreakObjectC2SPayload(entityId));
     }
 
     public static void sendAttackSwing() {
-        if (ClientPlayNetworking.canSend(AiNetworkPayloads.AttackSwingC2SPayload.ID)) {
-            ClientPlayNetworking.send(new AiNetworkPayloads.AttackSwingC2SPayload());
+        var connection = net.minecraft.client.Minecraft.getInstance().getConnection();
+        if (connection != null && AiNetworking.CHANNEL.isRemotePresent(connection.getConnection())) {
+            AiNetworking.CHANNEL.sendToServer(new AiNetworkPayloads.AttackSwingC2SPayload());
         }
     }
 
     public static void sendUndo() {
-        ClientPlayNetworking.send(new AiNetworkPayloads.UndoC2SPayload());
+        AiNetworking.CHANNEL.sendToServer(new AiNetworkPayloads.UndoC2SPayload());
     }
 
     /** Send a saved build to the server in parts small enough for client packets. */
@@ -106,12 +103,12 @@ public final class AiClientNetworking {
         for (int i = 0; i < total; i++) {
             int from = i * part;
             byte[] chunk = java.util.Arrays.copyOfRange(data, from, Math.min(data.length, from + part));
-            ClientPlayNetworking.send(new AiNetworkPayloads.RebuildPartC2SPayload(id, i, total, mode, scalePercent, chunk));
+            AiNetworking.CHANNEL.sendToServer(new AiNetworkPayloads.RebuildPartC2SPayload(id, i, total, mode, scalePercent, chunk));
         }
     }
 
     public static void sendSettingsSync(AiBuilderConfig config) {
-        ClientPlayNetworking.send(new AiNetworkPayloads.AiSettingsSyncC2SPayload(
+        AiNetworking.CHANNEL.sendToServer(new AiNetworkPayloads.AiSettingsSyncC2SPayload(
             config.provider.name(),
             config.modelName,
             config.apiUrl,

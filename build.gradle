@@ -30,6 +30,12 @@ legacyForge {
             server()
             programArgument '--nogui'
         }
+        // CI: opens a world, equips AI gear, takes screenshots and quits (client/SmokeTest.java).
+        smokeClient {
+            client()
+            systemProperty 'aib.smoketest', 'true'
+            gameDirectory = project.file('run/smoke')
+        }
         // Server-side game tests (in-world checks). Run with ./gradlew runGameTestServer
         gameTestServer {
             type = 'gameTestServer'

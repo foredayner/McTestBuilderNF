@@ -34,16 +34,28 @@ jobs:
           set -o pipefail
           ./gradlew runGameTestServer 2>&1 | tee gametest.log
 
+      - name: Client smoke test (screenshots)
+        id: smoke
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        timeout-minutes: 15
+        run: |
+          sudo apt-get install -y -qq xvfb > /dev/null
+          xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runSmokeClient > smoke.log 2>&1
+
       - name: Publish logs to the ci-logs branch
         if: always()
         run: |
           out=$(mktemp -d)
-          cp build.log gametest.log "$out/" 2>/dev/null || true
+          cp build.log gametest.log smoke.log "$out/" 2>/dev/null || true
+          cp -r run/smoke/screenshots "$out/screenshots" 2>/dev/null || true
+          cp run/smoke/logs/latest.log "$out/smoke-latest.log" 2>/dev/null || true
+          cp -r run/smoke/crash-reports "$out/smoke-crash-reports" 2>/dev/null || true
           cp -r build/test-results "$out/" 2>/dev/null || true
           cp -r run/logs runs/gameTestServer/logs "$out/gametest-logs" 2>/dev/null || true
           cp -r runs/gameTestServer/crash-reports "$out/" 2>/dev/null || true
           cp build/libs/*.jar "$out/" 2>/dev/null || true
-          echo "${GITHUB_SHA} ${GITHUB_REF_NAME} build=${{ steps.build.outcome }} gametest=${{ steps.gametest.outcome }}" > "$out/RUN.txt"
+          echo "${GITHUB_SHA} ${GITHUB_REF_NAME} build=${{ steps.build.outcome }} gametest=${{ steps.gametest.outcome }} smoke=${{ steps.smoke.outcome }}" > "$out/RUN.txt"
           cd "$out"
           git init -q && git checkout -q -b ci-logs && git add -A
           git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "logs for ${GITHUB_SHA}"

@@ -21,6 +21,7 @@ public class AiBuildAssistantClient {
     /** Called from the mod's constructor, on the player's game only. */
     public static void init(IEventBus modBus) {
         AiClientNetworking.registerReceivers();
+        SmokeTest.registerIfEnabled();
 
         modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
             // Solid object hitboxes are invisible; object items draw their own picture.

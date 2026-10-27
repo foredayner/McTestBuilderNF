@@ -15,7 +15,14 @@ java {
 }
 
 legacyForge {
-    version = "${minecraft_version}-${forge_version}"
+    // Built against Forge 47 (runs on Forge and NeoForge 1.20.1). CI also checks NeoForge with -Pplatform=neoforge.
+    if (findProperty('platform') == 'neoforge') {
+        enable {
+            neoForgeVersion = "${minecraft_version}-${neoforge_version}"
+        }
+    } else {
+        version = "${minecraft_version}-${forge_version}"
+    }
 
     parchment {
         minecraftVersion = parchment_minecraft_version

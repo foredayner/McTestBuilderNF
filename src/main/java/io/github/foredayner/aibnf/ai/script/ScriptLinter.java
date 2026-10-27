@@ -134,7 +134,7 @@ public final class ScriptLinter {
         String full = lower.contains(":") ? lower : "minecraft:" + lower;
         String id = full.contains("[") ? full.substring(0, full.indexOf('[')) : full;
         try {
-            if (!BuiltInRegistries.BLOCK.containsKey(ResourceLocation.parse(id))) {
+            if (!BuiltInRegistries.BLOCK.containsKey(new ResourceLocation(id))) {
                 return "\"" + value + "\" is not a block in Minecraft 1.21.4. Use ai.searchBlocks to find the right name.";
             }
         } catch (RuntimeException exception) {

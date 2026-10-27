@@ -246,7 +246,7 @@ public final class BuildPreview {
             if (id.contains("glass")) {
                 return GLASS;
             }
-            Block b = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(id));
+            Block b = BuiltInRegistries.BLOCK.get(new ResourceLocation(id));
             int rgb = b.defaultMapColor().col;
             return rgb == 0 ? 0xFF9A9A9A : 0xFF000000 | rgb;
         } catch (RuntimeException exception) {

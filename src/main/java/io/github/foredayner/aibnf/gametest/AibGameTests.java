@@ -331,14 +331,17 @@ public class AibGameTests {
         record.gear = "bow";
         net.minecraft.world.item.ItemStack bow = io.github.foredayner.aibnf.ai.build.GearItems.stackFor(record);
         check(bow.getItem() instanceof net.minecraft.world.item.BowItem, "it is a bow");
-        check(bow.is(net.minecraft.tags.ItemTags.BOW_ENCHANTABLE), "takes bow enchantments");
-        var arrow = ((io.github.foredayner.aibnf.content.GearBowItem) bow.getItem()).createProjectile(world, player, bow,
-            new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ARROW), false);
+        check(net.minecraft.world.item.enchantment.Enchantments.POWER_ARROWS.canEnchant(bow), "takes bow enchantments");
+        // 1.20.1: the bow turns the arrow vanilla made into its own (Forge's customArrow hook).
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, bow);
+        var gearBow = (io.github.foredayner.aibnf.content.GearBowItem) bow.getItem();
+        var arrow = gearBow.customArrow(((net.minecraft.world.item.ArrowItem) net.minecraft.world.item.Items.ARROW)
+            .createArrow(world, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ARROW), player));
         check(arrow instanceof io.github.foredayner.aibnf.content.AibArrowEntity, "plain arrows become AI arrows");
         io.github.foredayner.aibnf.content.AibArrowEntity aib = (io.github.foredayner.aibnf.content.AibArrowEntity) arrow;
         check(io.github.foredayner.aibnf.ai.build.GearItems.modelOf(aib.bow()) != null, "the arrow carries the bow's model");
-        var tipped = ((io.github.foredayner.aibnf.content.GearBowItem) bow.getItem()).createProjectile(world, player, bow,
-            new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SPECTRAL_ARROW), false);
+        var tipped = gearBow.customArrow(((net.minecraft.world.item.ArrowItem) net.minecraft.world.item.Items.SPECTRAL_ARROW)
+            .createArrow(world, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SPECTRAL_ARROW), player));
         check(!(tipped instanceof io.github.foredayner.aibnf.content.AibArrowEntity), "other arrows stay vanilla");
         aib.moveTo(origin.getX() + 0.5, origin.getY() + 2, origin.getZ() + 0.5, 0, 0);
         aib.setDeltaMovement(0, -1, 0.3);

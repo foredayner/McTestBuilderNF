@@ -1,0 +1,158 @@
+[28Oct2026 09:49:14.945] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.44, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.250, --fml.neoFormVersion, 20240808.144430]
+[28Oct2026 09:49:14.947] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 21.0.12.1+1-LTS
+[28Oct2026 09:49:14.948] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.12.1 by Eclipse Adoptium; OS Linux arch amd64 version 6.8.0-1064-azure
+[28Oct2026 09:49:15.009] [main/INFO] [net.neoforged.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[28Oct2026 09:49:15.034] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.2+mixin.0.8.7/2af2f021d8e02a0220dc27a7a72b4666d66d44ca/sponge-mixin-0.15.2+mixin.0.8.7.jar%2396!/ Service=ModLauncher Env=SERVER
+[28Oct2026 09:49:15.231] [main/INFO] [net.neoforged.fml.loading.moddiscovery.locators.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[28Oct2026 09:49:15.232] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		AI Build Assistant NF 1.0.0+mc1.21.1 (aibuildassistantnf)
+		Minecraft 1.21.1 (minecraft)
+		NeoForge 21.1.250 (neoforge)
+[28Oct2026 09:49:15.698] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[28Oct2026 09:49:15.703] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, .]
+[28Oct2026 09:49:16.566] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.3).
+[28Oct2026 09:49:20.044] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[28Oct2026 09:49:20.048] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[28Oct2026 09:49:20.051] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[28Oct2026 09:49:20.052] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[28Oct2026 09:49:20.053] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[28Oct2026 09:49:20.098] [modloading-worker-0/INFO] [aibuildassistantnf/]: Minecraft AI Build Assistant starting...
+[28Oct2026 09:49:20.104] [modloading-worker-0/INFO] [aibuildassistantnf/]: Loaded 2 forbidden block(s)
+[28Oct2026 09:49:20.107] [modloading-worker-0/INFO] [aibuildassistantnf/]: Loaded 2 forbidden block(s)
+[28Oct2026 09:49:20.109] [modloading-worker-0/INFO] [net.neoforged.neoforge.common.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.250, for MC 1.21.1
+[28Oct2026 09:49:20.348] [main/ERROR] [net.minecraft.server.dedicated.Settings/]: Failed to load properties from file: server.properties
+java.nio.file.NoSuchFileException: server.properties
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:92) ~[?:?]
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106) ~[?:?]
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111) ~[?:?]
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:261) ~[?:?]
+	at java.base/java.nio.file.Files.newByteChannel(Files.java:380) ~[?:?]
+	at java.base/java.nio.file.Files.newByteChannel(Files.java:432) ~[?:?]
+	at java.base/java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:420) ~[?:?]
+	at java.base/java.nio.file.Files.newInputStream(Files.java:160) ~[?:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.dedicated.Settings.loadFromFile(Settings.java:38) ~[neoforge-21.1.250.jar%23129!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.dedicated.DedicatedServerProperties.fromFile(DedicatedServerProperties.java:132) ~[neoforge-21.1.250.jar%23129!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.dedicated.DedicatedServerSettings.<init>(DedicatedServerSettings.java:12) ~[neoforge-21.1.250.jar%23129!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.Main.main(Main.java:125) ~[neoforge-21.1.250.jar%23129!/:?]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?]
+	at MC-BOOTSTRAP/fml_loader@4.0.44/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:136) ~[loader-4.0.44.jar%23104!/:4.0]
+	at MC-BOOTSTRAP/fml_loader@4.0.44/net.neoforged.fml.loading.targets.CommonLaunchHandler.serverService(CommonLaunchHandler.java:128) ~[loader-4.0.44.jar%23104!/:4.0]
+	at MC-BOOTSTRAP/fml_loader@4.0.44/net.neoforged.fml.loading.targets.NeoForgeServerDevLaunchHandler.runService(NeoForgeServerDevLaunchHandler.java:23) ~[loader-4.0.44.jar%23104!/:4.0]
+	at MC-BOOTSTRAP/fml_loader@4.0.44/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:118) ~[loader-4.0.44.jar%23104!/:4.0]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) [modlauncher-11.0.5.jar%2384!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) [modlauncher-11.0.5.jar%2384!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) [modlauncher-11.0.5.jar%2384!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.run(Launcher.java:103) [modlauncher-11.0.5.jar%2384!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.main(Launcher.java:74) [modlauncher-11.0.5.jar%2384!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) [modlauncher-11.0.5.jar%2384!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) [modlauncher-11.0.5.jar%2384!/:?]
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:210) [bootstraplauncher-2.0.2.jar:?]
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:69) [bootstraplauncher-2.0.2.jar:?]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?]
+	at net.neoforged.devlaunch.Main.main(Main.java:57) [DevLaunch-1.0.2.jar:?]
+[28Oct2026 09:49:20.370] [main/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[28Oct2026 09:49:20.410] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/work/McTestBuilderNF/McTestBuilderNF/build/moddev/artifacts/neoforge-21.1.250.jar%23129!/assets/.mcassetsroot' uses unexpected schema
+[28Oct2026 09:49:20.411] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/work/McTestBuilderNF/McTestBuilderNF/build/moddev/artifacts/neoforge-21.1.250.jar%23129!/data/.mcassetsroot' uses unexpected schema
+[28Oct2026 09:49:20.417] [main/INFO] [net.neoforged.neoforge.gametest.GameTestHooks/]: Enabled Gametest Namespaces: [aibuildassistantnf]
+[28Oct2026 09:49:21.152] [main/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 1291 recipes
+[28Oct2026 09:49:21.297] [main/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 1400 advancements
+[28Oct2026 09:49:22.009] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[28Oct2026 09:49:22.032] [worldgen/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 2%
+[28Oct2026 09:49:22.222] [Server thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 212 ms
+[28Oct2026 09:49:22.231] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: Started game test server
+[28Oct2026 09:49:22.249] [Server thread/INFO] [net.neoforged.neoforge.server.permission.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[28Oct2026 09:49:22.307] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: 15 tests are now running at position 3084504, -59, -1672038!
+[28Oct2026 09:49:22.878] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestRunner/]: Running test batch 'defaultBatch:0' (15 tests)...
+[28Oct2026 09:49:22.963] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: [               ]
+[28Oct2026 09:49:23.067] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 1 at (0.5, -60.0, -9.5)
+[28Oct2026 09:49:23.166] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:23.805] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 36 at (-1.5, -60.0, 3.5)
+[28Oct2026 09:49:23.808] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:23.924] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 39 at (-3.5, -60.0, 9.5)
+[28Oct2026 09:49:23.926] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:23.965] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 40 at (0.5, -60.0, -7.5)
+[28Oct2026 09:49:23.967] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:24.011] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 75 at (-3.5, -60.0, 8.5)
+[28Oct2026 09:49:24.012] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:25.710] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 76 at (-1.5, -60.0, -1.5)
+[28Oct2026 09:49:25.714] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:25.782] [Server thread/WARN] [net.minecraft.server.MinecraftServer/]: Can't keep up! Is the server overloaded? Running 2430ms or 48 ticks behind
+[28Oct2026 09:49:25.847] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 77 at (-0.5, -60.0, -1.5)
+[28Oct2026 09:49:25.849] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:25.943] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 78 at (1.5, -60.0, -2.5)
+[28Oct2026 09:49:25.945] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:25.980] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 79 at (3.5, -60.0, 6.5)
+[28Oct2026 09:49:25.982] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:26.021] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 114 at (-7.5, -60.0, 2.5)
+[28Oct2026 09:49:26.023] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:26.030] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 115 at (4.5, -60.0, -9.5)
+[28Oct2026 09:49:26.031] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:26.038] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 116 at (-5.5, -60.0, -7.5)
+[28Oct2026 09:49:26.039] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:26.072] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 117 at (-1.5, -60.0, 0.5)
+[28Oct2026 09:49:26.074] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:26.080] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 118 at (2.5, -60.0, 5.5)
+[28Oct2026 09:49:26.081] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:26.129] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 119 at (6.5, -60.0, 2.5)
+[28Oct2026 09:49:26.131] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:26.153] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 120 at (1.5, -60.0, 7.5)
+[28Oct2026 09:49:26.154] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:26.176] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: test-mock-player[embedded] logged in with entity id 121 at (-5.5, -60.0, 10.5)
+[28Oct2026 09:49:26.178] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player joined the game
+[28Oct2026 09:49:26.220] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: [+_+_+++++++_+++]
+[28Oct2026 09:49:26.247] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: [+_+_+++++++_+++]
+[28Oct2026 09:49:26.273] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.274] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.274] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.274] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.275] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.275] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.275] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.275] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.275] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.276] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.276] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.276] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.276] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.277] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.277] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player has made the advancement [Bring Home the Beacon]
+[28Oct2026 09:49:26.278] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: [+++_+++++++_+++]
+[28Oct2026 09:49:26.336] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: [+++++++++++_+++]
+[28Oct2026 09:49:26.353] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: [+++++++++++++++]
+[28Oct2026 09:49:26.355] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: ========= 15 GAME TESTS COMPLETE IN 4.046 s ======================
+[28Oct2026 09:49:26.355] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: All 15 required tests passed :)
+[28Oct2026 09:49:26.355] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: ====================================================
+[28Oct2026 09:49:26.368] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[28Oct2026 09:49:26.369] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[28Oct2026 09:49:26.421] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[28Oct2026 09:49:26.421] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[28Oct2026 09:49:26.426] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[28Oct2026 09:49:26.426] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[28Oct2026 09:49:26.429] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[28Oct2026 09:49:26.429] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[28Oct2026 09:49:26.431] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[28Oct2026 09:49:26.431] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[28Oct2026 09:49:26.433] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[28Oct2026 09:49:26.434] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[28Oct2026 09:49:26.436] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[28Oct2026 09:49:26.436] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[28Oct2026 09:49:26.488] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[28Oct2026 09:49:26.488] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[28Oct2026 09:49:26.491] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[28Oct2026 09:49:26.491] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[28Oct2026 09:49:26.494] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: test-mock-player lost connection: Server closed
+[28Oct2026 09:49:26.494] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: test-mock-player left the game
+[28Oct2026 09:49:26.496] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[28Oct2026 09:49:27.002] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[28Oct2026 09:49:27.833] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[28Oct2026 09:49:27.834] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[28Oct2026 09:49:27.842] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[28Oct2026 09:49:27.842] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[28Oct2026 09:49:27.842] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[28Oct2026 09:49:27.842] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
+[28Oct2026 09:49:27.847] [Server thread/INFO] [net.minecraft.gametest.framework.GameTestServer/]: Game test server shutting down

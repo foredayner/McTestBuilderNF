@@ -1,0 +1,555 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :createMinecraftArtifacts UP-TO-DATE
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :downloadAssets UP-TO-DATE
+> Task :writeGameTestServerLegacyClasspath
+> Task :prepareGameTestServerRun
+
+> Task :runGameTestServer
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[09:49:14] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.44, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.250, --fml.neoFormVersion, 20240808.144430]
+[09:49:14] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 21.0.12.1+1-LTS
+[09:49:14] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.12.1 by Eclipse Adoptium; OS Linux arch amd64 version 6.8.0-1064-azure
+[09:49:15] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[09:49:15] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.2+mixin.0.8.7/2af2f021d8e02a0220dc27a7a72b4666d66d44ca/sponge-mixin-0.15.2+mixin.0.8.7.jar%2396!/ Service=ModLauncher Env=SERVER
+[09:49:15] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[09:49:15] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		AI Build Assistant NF 1.0.0+mc1.21.1 (aibuildassistantnf)
+		Minecraft 1.21.1 (minecraft)
+		NeoForge 21.1.250 (neoforge)
+[09:49:15] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[09:49:15] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, .]
+[09:49:16] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.3).
+[09:49:20] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[09:49:20] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[09:49:20] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[09:49:20] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[09:49:20] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[09:49:20] [modloading-worker-0/INFO] [aibuildassistantnf/]: Minecraft AI Build Assistant starting...
+[09:49:20] [modloading-worker-0/INFO] [aibuildassistantnf/]: Loaded 2 forbidden block(s)
+[09:49:20] [modloading-worker-0/INFO] [aibuildassistantnf/]: Loaded 2 forbidden block(s)
+[09:49:20] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.250, for MC 1.21.1
+[09:49:20] [main/ERROR] [minecraft/Settings]: Failed to load properties from file: server.properties
+java.nio.file.NoSuchFileException: server.properties
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:92) ~[?:?] {}
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106) ~[?:?] {}
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111) ~[?:?] {}
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:261) ~[?:?] {}
+	at java.base/java.nio.file.Files.newByteChannel(Files.java:380) ~[?:?] {}
+	at java.base/java.nio.file.Files.newByteChannel(Files.java:432) ~[?:?] {}
+	at java.base/java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:420) ~[?:?] {}
+	at java.base/java.nio.file.Files.newInputStream(Files.java:160) ~[?:?] {}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.dedicated.Settings.loadFromFile(Settings.java:38) ~[neoforge-21.1.250.jar%23129!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.dedicated.DedicatedServerProperties.fromFile(DedicatedServerProperties.java:132) ~[neoforge-21.1.250.jar%23129!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.dedicated.DedicatedServerSettings.<init>(DedicatedServerSettings.java:12) ~[neoforge-21.1.250.jar%23129!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.Main.main(Main.java:125) ~[neoforge-21.1.250.jar%23129!/:?] {re:classloading}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.44/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:136) ~[loader-4.0.44.jar%23104!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.44/net.neoforged.fml.loading.targets.CommonLaunchHandler.serverService(CommonLaunchHandler.java:128) ~[loader-4.0.44.jar%23104!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.44/net.neoforged.fml.loading.targets.NeoForgeServerDevLaunchHandler.runService(NeoForgeServerDevLaunchHandler.java:23) ~[loader-4.0.44.jar%23104!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.44/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:118) ~[loader-4.0.44.jar%23104!/:4.0] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) [modlauncher-11.0.5.jar%2384!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) [modlauncher-11.0.5.jar%2384!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) [modlauncher-11.0.5.jar%2384!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.run(Launcher.java:103) [modlauncher-11.0.5.jar%2384!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.main(Launcher.java:74) [modlauncher-11.0.5.jar%2384!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) [modlauncher-11.0.5.jar%2384!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) [modlauncher-11.0.5.jar%2384!/:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:210) [bootstraplauncher-2.0.2.jar:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:69) [bootstraplauncher-2.0.2.jar:?] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at net.neoforged.devlaunch.Main.main(Main.java:57) [DevLaunch-1.0.2.jar:?] {}
+[09:49:20] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[09:49:20] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/home/runner/work/McTestBuilderNF/McTestBuilderNF/build/moddev/artifacts/neoforge-21.1.250.jar%23129!/assets/.mcassetsroot' uses unexpected schema
+[09:49:20] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/home/runner/work/McTestBuilderNF/McTestBuilderNF/build/moddev/artifacts/neoforge-21.1.250.jar%23129!/data/.mcassetsroot' uses unexpected schema
+[09:49:20] [main/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: [aibuildassistantnf]
+[09:49:21] [main/INFO] [minecraft/RecipeManager]: Loaded 1291 recipes
+[09:49:21] [main/INFO] [minecraft/AdvancementTree]: Loaded 1400 advancements
+[09:49:22] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[09:49:22] [worldgen/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 2%
+[09:49:22] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 212 ms
+[09:49:22] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+[09:49:22] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[09:49:22] [Server thread/INFO] [minecraft/GameTestServer]: 15 tests are now running at position 3084504, -59, -1672038!
+[09:49:22] [Server thread/INFO] [minecraft/GameTestRunner]: Running test batch 'defaultBatch:0' (15 tests)...
+[09:49:22] [Server thread/INFO] [minecraft/GameTestServer]: [               ]
+[09:49:23] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 1 at (0.5, -60.0, -9.5)
+[09:49:23] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[MinecraftAI] Initialized at BlockPos{x=3084506, y=-59, z=-1672036} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+def cx = 1.5
+def cz = 2.5
+ai.addSphere('red_concrete', cx, 0.35, cz, 0.3)
+ai.addPart('brown_concrete', cx - 0.03, 0.62, cz - 0.03, 0.06, 0.15, 0.06)
+ai.addPart('lime_concrete', cx, 0.7, cz - 0.04, 0.16, 0.02, 0.08, 30)
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084506, y=-59, z=-1672036} facing SOUTH as test-mock-player
+[09:49:23] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 36 at (-1.5, -60.0, 3.5)
+[09:49:23] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[MinecraftAI] Initialized at BlockPos{x=3084527, y=-59, z=-1672036} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.addTube('dark_oak_planks', [[0.3, -0.65, 0], [0.08, -0.35, 0], [0, 0, 0], [0.08, 0.35, 0], [0.3, 0.65, 0]], 0.035)
+ai.addCapsule('brown_wool', 0, -0.1, 0, 0, 0.1, 0, 0.05)
+ai.addCapsule('white_wool', 0.3, -0.65, 0, 0.3, 0.65, 0, 0.01)
+ai.arrowStart()
+ai.addCapsule('oak_planks', 0, 0, 0, 0, 0.7, 0, 0.018)
+ai.addCone('iron_block', 0, 0.66, 0, 0.045, 0.14)
+ai.mirrorOn()
+ai.addPart('red_wool', 0.012, 0.02, -0.006, 0.06, 0.16, 0.012)
+ai.mirrorOff()
+ai.arrowEnd()
+ai.effect('attack', [shape: 'ring', color: '#ff6600', color2: '#ffdd55', size: 1.2, count: 40, plane: 'flat', start: 'ground', moves: ['expand', 'fade'], ticks: 14])
+ai.effect('trail', [shape: 'star', color: '#ffaa33', size: 0.15, count: 12, moves: ['shrink', 'fade'], ticks: 10, every: 1])
+
+[SCRIPT] Execution complete
+[09:49:23] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 39 at (-3.5, -60.0, 9.5)
+[09:49:23] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[MinecraftAI] Initialized at BlockPos{x=3084550, y=-59, z=-1672032} facing NORTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.placeBox(0, 0, -4, 3, 2, 3, 'stone_bricks')
+ai.placeBlock(1, 2, -3, 'oak_stairs[facing=north]')
+
+[AI] Queued /fill outline box of minecraft:stone_bricks
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084549, y=-59, z=-1672032} facing NORTH as test-mock-player
+[09:49:23] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 40 at (0.5, -60.0, -7.5)
+[09:49:23] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[MinecraftAI] Initialized at BlockPos{x=3084569, y=-59, z=-1672036} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+def cx = 1.5
+def cz = 2.5
+ai.addSphere('red_concrete', cx, 0.35, cz, 0.3)
+ai.addPart('brown_concrete', cx - 0.03, 0.62, cz - 0.03, 0.06, 0.15, 0.06)
+ai.addPart('lime_concrete', cx, 0.7, cz - 0.04, 0.16, 0.02, 0.08, 30)
+
+[SCRIPT] Execution complete
+[09:49:24] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 75 at (-3.5, -60.0, 8.5)
+[09:49:24] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[MinecraftAI] Initialized at BlockPos{x=3084589, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+// plain steel sword, about 1.45 long; the hand holds it at (0, 0, 0), blade up (+Y), flat side facing -Z
+ai.addCapsule('dark_oak_planks', 0, -0.12, 0, 0, 0.22, 0, 0.045)            // grip
+ai.addSphere('gold_block', 0, -0.15, 0, 0.06)                               // pommel
+ai.addRoundBox('gold_block', -0.2, 0.22, -0.05, 0.4, 0.07, 0.1, 0.02)      // cross guard
+ai.addRoundBox('iron_block', -0.075, 0.29, -0.025, 0.15, 0.95, 0.05, 0.01) // blade
+ai.addRoundBox('light_gray_concrete', -0.02, 0.32, -0.03, 0.04, 0.85, 0.06, 0)  // groove down the blade
+ai.addCone('iron_block', 0, 1.24, 0, 0.075, 0.16)                           // tip
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084589, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+// red fire axe, about 1.2 long; hand at (0, 0, 0), handle up (+Y), blade out to +X
+ai.addCapsule('red_concrete', 0, -0.1, 0, 0, 1.15, 0, 0.04)                 // painted handle
+ai.addRoundBox('black_concrete', -0.05, -0.05, -0.05, 0.1, 0.3, 0.1, 0.03)  // rubber grip
+ai.addRoundBox('red_concrete', -0.08, 0.88, -0.06, 0.18, 0.2, 0.12, 0.02)   // head socket
+ai.addEllipsoid('red_concrete', 0.24, 0.98, 0, 0.16, 0.16, 0.03)            // blade
+ai.addEllipsoid('iron_block', 0.36, 0.98, 0, 0.06, 0.15, 0.032)             // sharpened steel edge
+ai.addCone('red_concrete', -0.1, 0.98, 0, 0.05, 0.14)                       // back spike (pointing up is fine)
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084589, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+// plain steel sword, about 1.45 long; the hand holds it at (0, 0, 0), blade up (+Y), flat side facing -Z
+ai.addCapsule('dark_oak_planks', 0, -0.12, 0, 0, 0.22, 0, 0.045)            // grip
+ai.addSphere('gold_block', 0, -0.15, 0, 0.06)                               // pommel
+ai.addRoundBox('gold_block', -0.2, 0.22, -0.05, 0.4, 0.07, 0.1, 0.02)      // cross guard
+ai.addRoundBox('iron_block', -0.075, 0.29, -0.025, 0.15, 0.95, 0.05, 0.01) // blade
+ai.addRoundBox('light_gray_concrete', -0.02, 0.32, -0.03, 0.04, 0.85, 0.06, 0)  // groove down the blade
+ai.addCone('iron_block', 0, 1.24, 0, 0.075, 0.16)                           // tip
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084589, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+// bear mascot head, bigger than the head, face toward -Z; the head is the box x -0.25..0.25, y 0..0.5, z -0.25..0.25
+ai.addEllipsoid('brown_terracotta', 0, 0.3, 0, 0.4, 0.38, 0.38)             // round head around the wearer's head
+ai.addCylinder('brown_concrete', 0, -0.1, 0, 0.27, 0.08)                     // darker neck rim
+ai.addEllipsoid('white_terracotta', 0, 0.2, -0.33, 0.17, 0.12, 0.1)         // muzzle standing out
+ai.addEllipsoid('black_concrete', 0, 0.26, -0.43, 0.06, 0.04, 0.03)         // nose
+ai.addCapsule('black_concrete', -0.05, 0.15, -0.42, 0.05, 0.15, -0.42, 0.015)  // mouth line
+ai.mirrorOn()
+ai.addSphere('white_concrete', 0.14, 0.4, -0.31, 0.065)                     // eye
+ai.addSphere('black_concrete', 0.14, 0.4, -0.355, 0.04)                     // pupil
+ai.addSphere('white_concrete', 0.155, 0.415, -0.39, 0.014)                  // shine
+ai.addEllipsoid('pink_terracotta', 0.24, 0.24, -0.3, 0.05, 0.03, 0.025)     // cheek
+ai.addSphere('brown_terracotta', 0.3, 0.62, 0, 0.12)                        // ear
+ai.addEllipsoid('pink_terracotta', 0.3, 0.62, -0.1, 0.07, 0.07, 0.03)       // inside of the ear
+ai.mirrorOff()
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084589, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+// knitted beanie with a pompom; sits on the top of the head and leaves the face free
+ai.addEllipsoid('red_wool', 0, 0.5, 0, 0.29, 0.21, 0.29)                    // knitted crown
+ai.addCylinder('white_wool', 0, 0.38, 0, 0.3, 0.1)                           // folded cuff
+ai.addSphere('white_wool', 0, 0.75, 0, 0.09)                                 // pompom
+for (int i = 0; i < 3; i++) {
+    ai.addCylinder('red_terracotta', 0, 0.52 + i * 0.07, 0, 0.27 - i * 0.04, 0.015)  // knit rows (darker)
+}
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084589, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.oversize()
+ai.addRoundBox('brown_terracotta', -0.27, -0.45, -0.15, 0.54, 0.06, 0.3, 0.02)
+ai.addTube('white_wool', [[0.1, -0.42, 0.15], [0.25, 0.6, 0.35], [0.2, 1.75, 0.25]], 0.015)
+ai.addCone('red_terracotta', 0.2, 1.68, 0.25, 0.1, 0.16)
+ai.addEllipsoid('red_concrete', 0.2, 3.8, 0.25, 1.6, 2.0, 1.6)
+ai.addEllipsoid('pink_concrete', -0.35, 4.5, -0.95, 0.3, 0.45, 0.25)
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084589, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.addRoundBox('brown_terracotta', -0.27, -0.45, -0.15, 0.54, 0.06, 0.3, 0.02)
+ai.addTube('white_wool', [[0.1, -0.42, 0.15], [0.25, 0.6, 0.35], [0.2, 1.75, 0.25]], 0.015)
+ai.addCone('red_terracotta', 0.2, 1.68, 0.25, 0.1, 0.16)
+ai.addEllipsoid('red_concrete', 0.2, 3.8, 0.25, 1.6, 2.0, 1.6)
+ai.addEllipsoid('pink_concrete', -0.35, 4.5, -0.95, 0.3, 0.45, 0.25)
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084589, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.oversize()
+ai.addEllipsoid('red_concrete', 0, 4, 0, 3.5, 3, 3)
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084589, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+// white bird wings on a harness; the torso is the box x -0.25..0.25, y -0.75..0, z -0.125..0.125, back toward +Z
+ai.addRoundBox('brown_terracotta', -0.27, -0.45, -0.15, 0.54, 0.06, 0.32, 0.02)  // harness around the chest
+ai.mirrorOn()
+ai.addEllipsoid('white_wool', 0.45, -0.2, 0.22, 0.4, 0.18, 0.05)                 // upper wing
+ai.addEllipsoid('white_wool', 0.55, -0.42, 0.24, 0.35, 0.14, 0.04)               // lower feathers
+ai.addEllipsoid('light_gray_wool', 0.75, -0.5, 0.24, 0.2, 0.08, 0.045)           // feather tips (shadow tone)
+ai.addCapsule('white_concrete', 0.12, -0.15, 0.17, 0.85, 0.0, 0.22, 0.04)        // wing bone
+ai.mirrorOff()
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084589, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.addCapsule('oak_planks', 0, -0.1, 0, 0, 1.4, 0, 0.04)
+ai.mirrorOn()
+ai.groupStart('gem')
+ai.addSphere('amethyst_block', 0.12, 1.45, 0, 0.06)
+ai.groupEnd()
+ai.mirrorOff()
+ai.animate('gem', 'spin', 0.12, 1.45, 0, 'y', 0.5, 0)
+ai.glow('gem')
+ai.effect('attack', [shape: 'heart', fill: true, color: '#ff66cc', size: 0.45, moves: ['forward', 'fade'], speed: 7])
+ai.effect('idle', [shape: 'burst', color: '#33ccff', size: 0.3, count: 6, moves: ['rise', 'fade'], every: 6])
+ai.aura('#ffdd66', 0.6)
+ai.effect('attack', [shape: 'points', points: [[0, 1], [1, 0], [0, -1], [-1, 0], [0, 1]], color: '#ffffff', plane: 'flat', start: 'ground'])
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084589, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.addSphere('stone', 0, 0.5, 0, 0.2)
+ai.effect('attack', [shape: 'nuke'])
+[ERROR] Script execution failed: unknown shape 'nuke'; use one of [burst, sphere, circle, ring, heart, star, crescent, slash, cross, spiral, bolt, magic_circle, square, triangle, diamond, line, points]
+java.lang.IllegalArgumentException: unknown shape 'nuke'; use one of [burst, sphere, circle, ring, heart, star, crescent, slash, cross, spiral, bolt, magic_circle, square, triangle, diamond, line, points]
+	at TRANSFORMER/aibuildassistantnf@1.0.0+mc1.21.1/io.github.foredayner.aibnf.ai.build.Spark.word(Spark.java:244)
+	at TRANSFORMER/aibuildassistantnf@1.0.0+mc1.21.1/io.github.foredayner.aibnf.ai.build.Spark.fromMap(Spark.java:189)
+	at TRANSFORMER/aibuildassistantnf@1.0.0+mc1.21.1/io.github.foredayner.aibnf.ai.api.MinecraftAI.effect(MinecraftAI.java:222)
+	at TRANSFORMER/aibuildassistantnf@1.0.0+mc1.21.1/io.github.foredayner.aibnf.ai.script.AiScriptFacade.effect(AiScriptFacade.java:222)
+	at io.github.foredayner.aibnf.ai.script.AiScriptFacade$effect$9.call(Unknown Source)
+	at MC-BOOTSTRAP/org.codehaus.groovy@3.0.17/org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+	at MC-BOOTSTRAP/org.codehaus.groovy@3.0.17/org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at MC-BOOTSTRAP/org.codehaus.groovy@3.0.17/org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:148)
+	at Script1.run(Script1.groovy:2)
+	at TRANSFORMER/aibuildassistantnf@1.0.0+mc1.21.1/io.github.foredayner.aibnf.ai.script.ScriptExecutor.executeScript(ScriptExecutor.java:48)
+	at TRANSFORMER/aibuildassistantnf@1.0.0+mc1.21.1/io.github.foredayner.aibnf.gametest.Demo.plan(Demo.java:103)
+	at TRANSFORMER/aibuildassistantnf@1.0.0+mc1.21.1/io.github.foredayner.aibnf.gametest.AibGameTests.gearIsAnItemWithItsModelAndIronStats(AibGameTests.java:277)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.gametest.framework.GameTestRegistry.lambda$turnMethodIntoConsumer$5(GameTestRegistry.java:169)
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.gametest.framework.TestFunction.run(TestFunction.java:40)
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.gametest.framework.GameTestInfo.startTest(GameTestInfo.java:162)
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.gametest.framework.GameTestInfo.tickInternal(GameTestInfo.java:124)
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.gametest.framework.GameTestInfo.tick(GameTestInfo.java:107)
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.gametest.framework.GameTestTicker.lambda$tick$0(GameTestTicker.java:39)
+	at java.base/java.util.concurrent.CopyOnWriteArrayList.forEach(CopyOnWriteArrayList.java:891)
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.gametest.framework.GameTestTicker.tick(GameTestTicker.java:39)
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1070)
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:932)
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.gametest.framework.GameTestServer.tickServer(GameTestServer.java:171)
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:713)
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:267)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[MinecraftAI] Initialized at BlockPos{x=3084589, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.addCapsule('dark_oak_planks', 0, -0.3, 0, 0, 0.35, 0, 0.05)
+ai.addSphere('gold_block', 0, -0.33, 0, 0.08)
+ai.addRoundBox('gold_block', -0.35, 0.35, -0.07, 0.7, 0.1, 0.14, 0.03)
+ai.addRoundBox('iron_block', -0.2, 0.45, -0.04, 0.4, 2.1, 0.08, 0.02)
+ai.addRoundBox('light_gray_concrete', -0.04, 0.5, -0.05, 0.08, 1.9, 0.1, 0)
+ai.addCone('iron_block', 0, 2.54, 0, 0.2, 0.36)
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084589, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.addCapsule('oak_planks', 0, 0, 0, 0, 4, 0, 0.05)
+[SCRIPT] Execution complete
+[09:49:25] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 76 at (-1.5, -60.0, -1.5)
+[09:49:25] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[MinecraftAI] Initialized at BlockPos{x=3084613, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+// plain steel sword, about 1.45 long; the hand holds it at (0, 0, 0), blade up (+Y), flat side facing -Z
+ai.addCapsule('dark_oak_planks', 0, -0.12, 0, 0, 0.22, 0, 0.045)            // grip
+ai.addSphere('gold_block', 0, -0.15, 0, 0.06)                               // pommel
+ai.addRoundBox('gold_block', -0.2, 0.22, -0.05, 0.4, 0.07, 0.1, 0.02)      // cross guard
+ai.addRoundBox('iron_block', -0.075, 0.29, -0.025, 0.15, 0.95, 0.05, 0.01) // blade
+ai.addRoundBox('light_gray_concrete', -0.02, 0.32, -0.03, 0.04, 0.85, 0.06, 0)  // groove down the blade
+ai.addCone('iron_block', 0, 1.24, 0, 0.075, 0.16)                           // tip
+
+ai.effect('attack', [shape: 'magic_circle', color: '#9933ff', size: 1.5, plane: 'flat', start: 'ground', moves: ['spin', 'fade']])
+
+[SCRIPT] Execution complete
+[09:49:25] [Server thread/WARN] [minecraft/MinecraftServer]: Can't keep up! Is the server overloaded? Running 2430ms or 48 ticks behind
+[09:49:25] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 77 at (-0.5, -60.0, -1.5)
+[09:49:25] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[MinecraftAI] Initialized at BlockPos{x=3084631, y=-59, z=-1672037} facing WEST as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+// rubber duck with a top hat, about 1.5 blocks tall; it looks at the player (-Z)
+def z = 2.6
+ai.addEllipsoid('yellow_concrete', 0, 0.42, z + 0.15, 0.42, 0.34, 0.55)      // body
+ai.addEllipsoid('yellow_terracotta', 0, 0.16, z + 0.15, 0.34, 0.1, 0.45)     // darker underside
+ai.addCone('yellow_concrete', 0, 0.45, z + 0.62, 0.16, 0.0, 0.32)          // tail
+ai.addSphere('yellow_concrete', 0, 0.98, z - 0.12, 0.3)                      // big head
+ai.addRoundBox('orange_concrete', -0.13, 0.84, z - 0.56, 0.26, 0.1, 0.2, 0.04) // beak
+ai.addCylinder('black_concrete', 0, 1.24, z - 0.12, 0.22, 0.03)              // hat brim
+ai.addCylinder('black_concrete', 0, 1.26, z - 0.12, 0.14, 0.26)              // hat
+ai.addCylinder('red_concrete', 0, 1.29, z - 0.12, 0.145, 0.05)               // hat band
+ai.mirrorOn()
+ai.addSphere('black_concrete', 0.13, 1.04, z - 0.38, 0.06)                   // eyes
+ai.addSphere('white_concrete', 0.11, 1.07, z - 0.43, 0.02)                   // eye shine
+ai.addEllipsoid('yellow_terracotta', 0.4, 0.48, z + 0.2, 0.07, 0.18, 0.3)    // wings
+ai.addRoundBox('orange_concrete', 0.1, 0, z - 0.15, 0.16, 0.05, 0.2, 0.02)   // feet
+ai.mirrorOff()
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084631, y=-59, z=-1672037} facing WEST as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+// desk lamp, about 1 block tall
+def z = 2.5
+ai.addCylinder('spruce_planks', 0, 0, z, 0.22, 0.06)                         // base
+ai.addCylinder('dark_oak_planks', 0, 0.06, z, 0.18, 0.02)                     // base trim (darker)
+ai.addTube('iron_block', [[0, 0.06, z], [0.06, 0.35, z + 0.04], [0, 0.66, z]], 0.035)  // curved stem
+ai.addSphere('glowstone', 0, 0.68, z, 0.08)                                   // bulb
+ai.addCone('white_wool', 0, 0.6, z, 0.3, 0.15, 0.36)                          // shade
+ai.addCone('light_gray_wool', 0, 0.58, z, 0.31, 0.29, 0.03)                   // shade rim
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084631, y=-59, z=-1672037} facing WEST as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+// wooden chair at real size; the seat front faces the player
+def z = 2.2
+def w = 0.8
+def d = 0.8
+ai.addRoundBox('oak_planks', -w / 2, 0.45, z, w, 0.08, d, 0.02)              // seat
+ai.addRoundBox('red_wool', -w / 2 + 0.06, 0.53, z + 0.06, w - 0.12, 0.05, d - 0.12, 0.03)  // cushion
+ai.mirrorOn()
+ai.addRoundBox('oak_planks', w / 2 - 0.1, 0, z + 0.02, 0.08, 0.45, 0.08, 0.01)          // front legs
+ai.addRoundBox('stripped_oak_log', w / 2 - 0.1, 0, z + d - 0.1, 0.08, 1.2, 0.08, 0.01)  // back legs and posts
+ai.mirrorOff()
+for (int i = 0; i < 3; i++) {
+    ai.addRoundBox('oak_planks', -w / 2 + 0.06, 0.72 + i * 0.16, z + d - 0.09, w - 0.12, 0.08, 0.05, 0.01)  // back slats
+}
+
+[SCRIPT] Execution complete
+[09:49:25] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 78 at (1.5, -60.0, -2.5)
+[09:49:25] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[MinecraftAI] Initialized at BlockPos{x=3084505, y=-59, z=-1672015} facing NORTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.placeBox(0, 0, -6, 5, 3, 5, 'oak_planks')
+ai.placeBlock(2, 0, -1, 'oak_door[facing=south,half=lower]')
+ai.placeBlock(2, 1, -1, 'oak_door[facing=south,half=upper]')
+ai.placeBlock(2, 1, -4, 'bookshelf')
+ai.mark('clue:diary', 2, 1, -4)
+
+[AI] Queued /fill outline box of minecraft:oak_planks
+[SCRIPT] Execution complete
+[09:49:25] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 79 at (3.5, -60.0, 6.5)
+[09:49:25] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[MinecraftAI] Initialized at BlockPos{x=3084653, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+def cx = 1.5
+def cz = 2.5
+ai.addSphere('red_concrete', cx, 0.35, cz, 0.3)
+ai.addPart('brown_concrete', cx - 0.03, 0.62, cz - 0.03, 0.06, 0.15, 0.06)
+ai.addPart('lime_concrete', cx, 0.7, cz - 0.04, 0.16, 0.02, 0.08, 30)
+
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084653, y=-59, z=-1672037} facing SOUTH as test-mock-player
+[09:49:26] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 114 at (-7.5, -60.0, 2.5)
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[09:49:26] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 115 at (4.5, -60.0, -9.5)
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[09:49:26] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 116 at (-5.5, -60.0, -7.5)
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[MinecraftAI] Initialized at BlockPos{x=3084547, y=-59, z=-1672012} facing SOUTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.placeBox(-3, 0, 4, 7, 4, 7, 'stone_bricks')
+ai.placeFloor(-3, -1, 4, 7, 7, 'oak_planks')
+ai.placeFloor(-3, 4, 4, 7, 7, 'dark_oak_planks')
+ai.clearArea(0, 0, 4, 1, 2, 1)
+ai.placeBlock(0, 0, 4, 'oak_door[facing=north,half=lower]')
+ai.placeBlock(0, 1, 4, 'oak_door[facing=north,half=upper]')
+ai.placeBlock(-3, 2, 7, 'glass')
+ai.placeBlock(3, 2, 7, 'glass')
+ai.placeBlock(-1, 0, 5, 'oak_stairs[facing=south]')
+
+[AI] Queued /fill outline box of minecraft:stone_bricks
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084547, y=-59, z=-1672012} facing EAST as test-mock-player
+[09:49:26] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 117 at (-1.5, -60.0, 0.5)
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[09:49:26] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 118 at (2.5, -60.0, 5.5)
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[MinecraftAI] Initialized at BlockPos{x=3084569, y=-59, z=-1672009} facing NORTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.placeBox(0, 0, -4, 3, 2, 3, 'stone_bricks')
+ai.placeBlock(1, 2, -3, 'oak_stairs[facing=north]')
+
+[AI] Queued /fill outline box of minecraft:stone_bricks
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084574, y=-59, z=-1672009} facing NORTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.placeBox(0, 0, -4, 3, 2, 3, 'stone_bricks')
+ai.placeBlock(1, 2, -3, 'oak_stairs[facing=north]')
+
+[AI] Queued /fill outline box of minecraft:stone_bricks
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084569, y=-59, z=-1672009} facing NORTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.placeBox(0, 0, -4, 3, 2, 3, 'stone_bricks')
+ai.placeBlock(1, 2, -3, 'oak_stairs[facing=north]')
+
+[AI] Queued /fill outline box of minecraft:stone_bricks
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084569, y=-59, z=-1672009} facing NORTH as test-mock-player
+[MinecraftAI] Initialized at BlockPos{x=3084574, y=-59, z=-1672009} facing NORTH as test-mock-player
+[09:49:26] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 119 at (6.5, -60.0, 2.5)
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[MinecraftAI] Initialized at BlockPos{x=3084591, y=-59, z=-1672009} facing NORTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.placeBox(0, 0, -4, 3, 2, 3, 'stone_bricks')
+ai.placeBlock(1, 2, -3, 'oak_stairs[facing=north]')
+
+[AI] Queued /fill outline box of minecraft:stone_bricks
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084591, y=-59, z=-1672009} facing NORTH as test-mock-player
+[09:49:26] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 120 at (1.5, -60.0, 7.5)
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[MinecraftAI] Initialized at BlockPos{x=3084612, y=-59, z=-1672013} facing NORTH as test-mock-player
+[SCRIPT] Executing AI code...
+[SCRIPT CODE]
+ai.placeBox(0, 0, -4, 3, 2, 3, 'stone_bricks')
+ai.placeBlock(1, 2, -3, 'oak_stairs[facing=north]')
+
+[AI] Queued /fill outline box of minecraft:stone_bricks
+[SCRIPT] Execution complete
+[MinecraftAI] Initialized at BlockPos{x=3084612, y=-59, z=-1672013} facing NORTH as test-mock-player
+[09:49:26] [Server thread/INFO] [minecraft/PlayerList]: test-mock-player[embedded] logged in with entity id 121 at (-5.5, -60.0, 10.5)
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player joined the game
+[09:49:26] [Server thread/INFO] [minecraft/GameTestServer]: [+_+_+++++++_+++]
+[09:49:26] [Server thread/INFO] [minecraft/GameTestServer]: [+_+_+++++++_+++]
+[MinecraftAI] Initialized at BlockPos{x=3084569, y=-59, z=-1672009} facing NORTH as test-mock-player
+[MinecraftAI] Initialized at BlockPos{x=3084574, y=-59, z=-1672009} facing NORTH as test-mock-player
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player has made the advancement [Bring Home the Beacon]
+[09:49:26] [Server thread/INFO] [minecraft/GameTestServer]: [+++_+++++++_+++]
+[09:49:26] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++_+++]
+[09:49:26] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++++++]
+[09:49:26] [Server thread/INFO] [minecraft/GameTestServer]: ========= 15 GAME TESTS COMPLETE IN 4.046 s ======================
+[09:49:26] [Server thread/INFO] [minecraft/GameTestServer]: All 15 required tests passed :)
+[09:49:26] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[09:49:26] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: test-mock-player lost connection: Server closed
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player left the game
+[09:49:26] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: test-mock-player lost connection: Server closed
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player left the game
+[09:49:26] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: test-mock-player lost connection: Server closed
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player left the game
+[09:49:26] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: test-mock-player lost connection: Server closed
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player left the game
+[09:49:26] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: test-mock-player lost connection: Server closed
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player left the game
+[09:49:26] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: test-mock-player lost connection: Server closed
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player left the game
+[09:49:26] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: test-mock-player lost connection: Server closed
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player left the game
+[09:49:26] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: test-mock-player lost connection: Server closed
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player left the game
+[09:49:26] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: test-mock-player lost connection: Server closed
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: test-mock-player left the game
+[09:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[09:49:27] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[09:49:27] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[09:49:27] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[09:49:27] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[09:49:27] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[09:49:27] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[09:49:27] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[09:49:27] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gametest-1793180951514.json
+
+[Incubating] Problems report is available at: file:///home/runner/work/McTestBuilderNF/McTestBuilderNF/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 18s
+7 actionable tasks: 3 executed, 4 up-to-date

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.foredayner.aibnf.ai.script.ScriptLinterTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-28T09:49:07.990Z" hostname="runnervmwhx2h" time="0.693">
+  <properties/>
+  <testcase name="catchesUnknownFunctionsAndBlocks()" classname="io.github.foredayner.aibnf.ai.script.ScriptLinterTest" time="0.468"/>
+  <testcase name="catchesCompileErrorsAndForbiddenCode()" classname="io.github.foredayner.aibnf.ai.script.ScriptLinterTest" time="0.006"/>
+  <testcase name="tablesOfNumbersWorkButMethodDefinitionsDoNot()" classname="io.github.foredayner.aibnf.ai.script.ScriptLinterTest" time="0.131"/>
+  <testcase name="goodScriptsPass()" classname="io.github.foredayner.aibnf.ai.script.ScriptLinterTest" time="0.026"/>
+  <testcase name="classicForLoopsCompileButClosuresDoNot()" classname="io.github.foredayner.aibnf.ai.script.ScriptLinterTest" time="0.026"/>
+  <testcase name="catchesWrongArgumentCountWithLine()" classname="io.github.foredayner.aibnf.ai.script.ScriptLinterTest" time="0.016"/>
+  <testcase name="catchesWallsWithoutDirectionAndFarCoordinates()" classname="io.github.foredayner.aibnf.ai.script.ScriptLinterTest" time="0.016"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

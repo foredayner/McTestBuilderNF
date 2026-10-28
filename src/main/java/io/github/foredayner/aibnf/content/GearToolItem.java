@@ -73,6 +73,15 @@ public class GearToolItem extends Item implements GearItem {
         return kind.base.canPerformAction(baseStack(), ability);
     }
 
+    /**
+     * Stats of the vanilla item. Swords and tools keep theirs in a data component (copied when
+     * registered), but 1.21.1 armour gives its armour through this method, so ask the item too.
+     */
+    @Override
+    public net.minecraft.world.item.component.ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
+        return kind.base.getDefaultAttributeModifiers(baseStack());
+    }
+
     @Override
     public int getEnchantmentValue() {
         return kind.base.getEnchantmentValue();

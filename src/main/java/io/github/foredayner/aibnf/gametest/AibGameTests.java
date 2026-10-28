@@ -236,8 +236,7 @@ public class AibGameTests {
         net.minecraft.world.item.ItemStack helmStack = io.github.foredayner.aibnf.ai.build.GearItems.stackFor(helm);
         check(helmStack.getEquipmentSlot() == net.minecraft.world.entity.EquipmentSlot.HEAD, "a helmet goes on the head");
         check(helmStack.is(net.minecraft.tags.ItemTags.HEAD_ARMOR_ENCHANTABLE), "takes head armour enchantments");
-        var modifiers = helmStack.get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS);
-        check(modifiers != null && !modifiers.modifiers().isEmpty(), "it gives armour");
+        check(!helmStack.getAttributeModifiers().modifiers().isEmpty(), "it gives armour");
 
         // Effects and movement: recorded, carried by the item, and dropped when the order did not ask.
         BuildPlan fx = Demo.plan(world, origin, player, """

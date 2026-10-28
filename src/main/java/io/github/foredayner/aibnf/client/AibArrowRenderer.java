@@ -17,7 +17,7 @@ import net.minecraft.util.Mth;
  */
 public class AibArrowRenderer extends ArrowRenderer<AibArrowEntity> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/projectiles/arrow.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("textures/entity/projectiles/arrow.png");
 
     public AibArrowRenderer(EntityRendererProvider.Context context) {
         super(context);

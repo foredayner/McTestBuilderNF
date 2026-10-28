@@ -1,68 +1,69 @@
 package io.github.foredayner.aibnf.network;
 
-import net.minecraft.network.FriendlyByteBuf;
+import io.github.foredayner.aibnf.AiBuildAssistantMod;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 
-/**
- * Messages between the game and the server. Each one writes itself to a buffer and has a
- * matching {@code read}; {@link AiNetworking} registers them on the mod's network channel.
- */
 public final class AiNetworkPayloads {
-
-    /** Long text fields (JSON lists, forbidden block lists) may be bigger than the default 32767 chars. */
-    static final int LONG_TEXT = 1 << 20;
 
     private AiNetworkPayloads() {
     }
 
-    /** Every message can write itself. */
-    public interface Msg {
-        void write(FriendlyByteBuf buf);
-    }
+    public record AiLogS2CPayload(String message) implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<AiLogS2CPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "ai_log"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, AiLogS2CPayload> CODEC =
+            StreamCodec.composite(ByteBufCodecs.STRING_UTF8, AiLogS2CPayload::message, AiLogS2CPayload::new);
 
-    public record AiLogS2CPayload(String message) implements Msg {
-        public void write(FriendlyByteBuf buf) {
-            buf.writeUtf(message, LONG_TEXT);
-        }
-
-        public static AiLogS2CPayload read(FriendlyByteBuf buf) {
-            return new AiLogS2CPayload(buf.readUtf(LONG_TEXT));
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
         }
     }
 
-    public record ApprovalPendingS2CPayload(String description) implements Msg {
-        public void write(FriendlyByteBuf buf) {
-            buf.writeUtf(description, LONG_TEXT);
-        }
+    public record ApprovalPendingS2CPayload(String description) implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<ApprovalPendingS2CPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "approval_pending"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, ApprovalPendingS2CPayload> CODEC =
+            StreamCodec.composite(ByteBufCodecs.STRING_UTF8, ApprovalPendingS2CPayload::description, ApprovalPendingS2CPayload::new);
 
-        public static ApprovalPendingS2CPayload read(FriendlyByteBuf buf) {
-            return new ApprovalPendingS2CPayload(buf.readUtf(LONG_TEXT));
-        }
-    }
-
-    public record ApprovalClearS2CPayload() implements Msg {
-        public void write(FriendlyByteBuf buf) {
-        }
-
-        public static ApprovalClearS2CPayload read(FriendlyByteBuf buf) {
-            return new ApprovalClearS2CPayload();
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
         }
     }
 
-    public record ApprovalAcceptC2SPayload() implements Msg {
-        public void write(FriendlyByteBuf buf) {
-        }
+    public record ApprovalClearS2CPayload() implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<ApprovalClearS2CPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "approval_clear"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, ApprovalClearS2CPayload> CODEC =
+            StreamCodec.unit(new ApprovalClearS2CPayload());
 
-        public static ApprovalAcceptC2SPayload read(FriendlyByteBuf buf) {
-            return new ApprovalAcceptC2SPayload();
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
         }
     }
 
-    public record ApprovalDenyC2SPayload() implements Msg {
-        public void write(FriendlyByteBuf buf) {
-        }
+    public record ApprovalAcceptC2SPayload() implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<ApprovalAcceptC2SPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "approval_accept"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, ApprovalAcceptC2SPayload> CODEC =
+            StreamCodec.unit(new ApprovalAcceptC2SPayload());
 
-        public static ApprovalDenyC2SPayload read(FriendlyByteBuf buf) {
-            return new ApprovalDenyC2SPayload();
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
+        }
+    }
+
+    public record ApprovalDenyC2SPayload() implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<ApprovalDenyC2SPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "approval_deny"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, ApprovalDenyC2SPayload> CODEC =
+            StreamCodec.unit(new ApprovalDenyC2SPayload());
+
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
         }
     }
 
@@ -78,24 +79,42 @@ public final class AiNetworkPayloads {
         int openAiWebSearchEnabled,
         int autoRetries,
         int keepAliveMinutes
-    ) implements Msg {
-        public void write(FriendlyByteBuf buf) {
-            buf.writeUtf(provider);
-            buf.writeUtf(modelName);
-            buf.writeUtf(apiUrl);
-            buf.writeUtf(apiKey);
-            buf.writeVarInt(ticksPerBlock);
-            buf.writeUtf(forbiddenBlocksPath);
-            buf.writeUtf(forbiddenBlocksData, LONG_TEXT);
-            buf.writeVarInt(debugLogEnabled);
-            buf.writeVarInt(openAiWebSearchEnabled);
-            buf.writeVarInt(autoRetries);
-            buf.writeVarInt(keepAliveMinutes);
-        }
+    ) implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<AiSettingsSyncC2SPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "settings_sync"));
+        // 1.21.4's PacketCodec.tuple stops at 6 fields, so the 9 fields are written by hand
+        // in the same order and encodings the 1.21.11 tuple used.
+        public static final StreamCodec<RegistryFriendlyByteBuf, AiSettingsSyncC2SPayload> CODEC = StreamCodec.ofMember(
+            (payload, buf) -> {
+                ByteBufCodecs.STRING_UTF8.encode(buf, payload.provider());
+                ByteBufCodecs.STRING_UTF8.encode(buf, payload.modelName());
+                ByteBufCodecs.STRING_UTF8.encode(buf, payload.apiUrl());
+                ByteBufCodecs.STRING_UTF8.encode(buf, payload.apiKey());
+                ByteBufCodecs.VAR_INT.encode(buf, payload.ticksPerBlock());
+                ByteBufCodecs.STRING_UTF8.encode(buf, payload.forbiddenBlocksPath());
+                ByteBufCodecs.STRING_UTF8.encode(buf, payload.forbiddenBlocksData());
+                ByteBufCodecs.VAR_INT.encode(buf, payload.debugLogEnabled());
+                ByteBufCodecs.VAR_INT.encode(buf, payload.openAiWebSearchEnabled());
+                ByteBufCodecs.VAR_INT.encode(buf, payload.autoRetries());
+                ByteBufCodecs.VAR_INT.encode(buf, payload.keepAliveMinutes());
+            },
+            buf -> new AiSettingsSyncC2SPayload(
+                ByteBufCodecs.STRING_UTF8.decode(buf),
+                ByteBufCodecs.STRING_UTF8.decode(buf),
+                ByteBufCodecs.STRING_UTF8.decode(buf),
+                ByteBufCodecs.STRING_UTF8.decode(buf),
+                ByteBufCodecs.VAR_INT.decode(buf),
+                ByteBufCodecs.STRING_UTF8.decode(buf),
+                ByteBufCodecs.STRING_UTF8.decode(buf),
+                ByteBufCodecs.VAR_INT.decode(buf),
+                ByteBufCodecs.VAR_INT.decode(buf),
+                ByteBufCodecs.VAR_INT.decode(buf),
+                ByteBufCodecs.VAR_INT.decode(buf)
+            )
+        );
 
-        public static AiSettingsSyncC2SPayload read(FriendlyByteBuf buf) {
-            return new AiSettingsSyncC2SPayload(buf.readUtf(), buf.readUtf(), buf.readUtf(), buf.readUtf(), buf.readVarInt(),
-                buf.readUtf(), buf.readUtf(LONG_TEXT), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt());
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
         }
 
         public boolean isDebugLogEnabled() {
@@ -108,51 +127,58 @@ public final class AiNetworkPayloads {
     }
 
     /** Server -> client: a finished build (gzip'd BuildRecord JSON) for the history tab. */
-    public record BuildCompleteS2CPayload(byte[] data) implements Msg {
-        public void write(FriendlyByteBuf buf) {
-            buf.writeByteArray(data);
-        }
+    public record BuildCompleteS2CPayload(byte[] data) implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<BuildCompleteS2CPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "build_complete"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, BuildCompleteS2CPayload> CODEC =
+            StreamCodec.composite(ByteBufCodecs.BYTE_ARRAY, BuildCompleteS2CPayload::data, BuildCompleteS2CPayload::new);
 
-        public static BuildCompleteS2CPayload read(FriendlyByteBuf buf) {
-            return new BuildCompleteS2CPayload(buf.readByteArray());
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
         }
     }
 
     /** Client -> server: one part of a saved build to rebuild (client packets are size-limited). */
-    public record RebuildPartC2SPayload(int id, int index, int total, int mode, int scalePercent, byte[] data) implements Msg {
-        public void write(FriendlyByteBuf buf) {
-            buf.writeVarInt(id);
-            buf.writeVarInt(index);
-            buf.writeVarInt(total);
-            buf.writeVarInt(mode);
-            buf.writeVarInt(scalePercent);
-            buf.writeByteArray(data);
-        }
+    public record RebuildPartC2SPayload(int id, int index, int total, int mode, int scalePercent, byte[] data) implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<RebuildPartC2SPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "rebuild_part"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, RebuildPartC2SPayload> CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, RebuildPartC2SPayload::id,
+            ByteBufCodecs.VAR_INT, RebuildPartC2SPayload::index,
+            ByteBufCodecs.VAR_INT, RebuildPartC2SPayload::total,
+            ByteBufCodecs.VAR_INT, RebuildPartC2SPayload::mode,
+            ByteBufCodecs.VAR_INT, RebuildPartC2SPayload::scalePercent,
+            ByteBufCodecs.BYTE_ARRAY, RebuildPartC2SPayload::data,
+            RebuildPartC2SPayload::new
+        );
 
-        public static RebuildPartC2SPayload read(FriendlyByteBuf buf) {
-            return new RebuildPartC2SPayload(buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
-                buf.readVarInt(), buf.readByteArray(io.github.foredayner.aibnf.ai.build.RebuildService.PART_SIZE));
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
         }
     }
 
     /** Client -> server: I finished mining this object (by one of its hitbox entities). */
-    public record BreakObjectC2SPayload(int entityId) implements Msg {
-        public void write(FriendlyByteBuf buf) {
-            buf.writeVarInt(entityId);
-        }
+    public record BreakObjectC2SPayload(int entityId) implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<BreakObjectC2SPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "break_object"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, BreakObjectC2SPayload> CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, BreakObjectC2SPayload::entityId,
+            BreakObjectC2SPayload::new
+        );
 
-        public static BreakObjectC2SPayload read(FriendlyByteBuf buf) {
-            return new BreakObjectC2SPayload(buf.readVarInt());
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
         }
     }
 
     /** Client -> server: undo my last build. */
-    public record UndoC2SPayload() implements Msg {
-        public void write(FriendlyByteBuf buf) {
-        }
+    public record UndoC2SPayload() implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<UndoC2SPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "undo"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, UndoC2SPayload> CODEC = StreamCodec.unit(new UndoC2SPayload());
 
-        public static UndoC2SPayload read(FriendlyByteBuf buf) {
-            return new UndoC2SPayload();
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
         }
     }
 
@@ -161,64 +187,75 @@ public final class AiNetworkPayloads {
      * direction, at a scale. Each player's game draws the dots.
      */
     public record SparkS2CPayload(String sparks, double x, double y, double z, float dx, float dy, float dz, float scale)
-        implements Msg {
-        public void write(FriendlyByteBuf buf) {
-            buf.writeUtf(sparks, LONG_TEXT);
-            buf.writeDouble(x);
-            buf.writeDouble(y);
-            buf.writeDouble(z);
-            buf.writeFloat(dx);
-            buf.writeFloat(dy);
-            buf.writeFloat(dz);
-            buf.writeFloat(scale);
-        }
+        implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<SparkS2CPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "spark"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, SparkS2CPayload> CODEC = StreamCodec.ofMember(
+            (p, buf) -> {
+                ByteBufCodecs.STRING_UTF8.encode(buf, p.sparks());
+                ByteBufCodecs.DOUBLE.encode(buf, p.x());
+                ByteBufCodecs.DOUBLE.encode(buf, p.y());
+                ByteBufCodecs.DOUBLE.encode(buf, p.z());
+                ByteBufCodecs.FLOAT.encode(buf, p.dx());
+                ByteBufCodecs.FLOAT.encode(buf, p.dy());
+                ByteBufCodecs.FLOAT.encode(buf, p.dz());
+                ByteBufCodecs.FLOAT.encode(buf, p.scale());
+            },
+            buf -> new SparkS2CPayload(ByteBufCodecs.STRING_UTF8.decode(buf), ByteBufCodecs.DOUBLE.decode(buf), ByteBufCodecs.DOUBLE.decode(buf),
+                ByteBufCodecs.DOUBLE.decode(buf), ByteBufCodecs.FLOAT.decode(buf), ByteBufCodecs.FLOAT.decode(buf),
+                ByteBufCodecs.FLOAT.decode(buf), ByteBufCodecs.FLOAT.decode(buf)));
 
-        public static SparkS2CPayload read(FriendlyByteBuf buf) {
-            return new SparkS2CPayload(buf.readUtf(LONG_TEXT), buf.readDouble(), buf.readDouble(), buf.readDouble(),
-                buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat());
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
         }
     }
 
     /** Client -> server: the player swung an AI weapon (attack key, charged): play its attack effect. */
-    public record AttackSwingC2SPayload() implements Msg {
-        public void write(FriendlyByteBuf buf) {
-        }
+    public record AttackSwingC2SPayload() implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<AttackSwingC2SPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "attack_swing"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, AttackSwingC2SPayload> CODEC = StreamCodec.unit(new AttackSwingC2SPayload());
 
-        public static AttackSwingC2SPayload read(FriendlyByteBuf buf) {
-            return new AttackSwingC2SPayload();
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
         }
     }
 
     /** Client -> server: remove a placed object (by its hitbox entity id, or by tag from the list). */
-    public record RemoveObjectC2SPayload(int entityId, String tag) implements Msg {
-        public void write(FriendlyByteBuf buf) {
-            buf.writeVarInt(entityId);
-            buf.writeUtf(tag);
-        }
+    public record RemoveObjectC2SPayload(int entityId, String tag) implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<RemoveObjectC2SPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "remove_object"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, RemoveObjectC2SPayload> CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, RemoveObjectC2SPayload::entityId,
+            ByteBufCodecs.STRING_UTF8, RemoveObjectC2SPayload::tag,
+            RemoveObjectC2SPayload::new
+        );
 
-        public static RemoveObjectC2SPayload read(FriendlyByteBuf buf) {
-            return new RemoveObjectC2SPayload(buf.readVarInt(), buf.readUtf());
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
         }
     }
 
     /** Client -> server: which objects are near me? */
-    public record NearbyRequestC2SPayload() implements Msg {
-        public void write(FriendlyByteBuf buf) {
-        }
+    public record NearbyRequestC2SPayload() implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<NearbyRequestC2SPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "nearby_request"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, NearbyRequestC2SPayload> CODEC = StreamCodec.unit(new NearbyRequestC2SPayload());
 
-        public static NearbyRequestC2SPayload read(FriendlyByteBuf buf) {
-            return new NearbyRequestC2SPayload();
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
         }
     }
 
     /** Server -> client: nearby objects as JSON (ObjectService.Nearby list). */
-    public record NearbyObjectsS2CPayload(String json) implements Msg {
-        public void write(FriendlyByteBuf buf) {
-            buf.writeUtf(json, LONG_TEXT);
-        }
+    public record NearbyObjectsS2CPayload(String json) implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<NearbyObjectsS2CPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "nearby_objects"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, NearbyObjectsS2CPayload> CODEC =
+            StreamCodec.composite(ByteBufCodecs.STRING_UTF8, NearbyObjectsS2CPayload::json, NearbyObjectsS2CPayload::new);
 
-        public static NearbyObjectsS2CPayload read(FriendlyByteBuf buf) {
-            return new NearbyObjectsS2CPayload(buf.readUtf(LONG_TEXT));
+        @Override
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return ID;
         }
     }
 }

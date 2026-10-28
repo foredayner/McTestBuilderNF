@@ -8,7 +8,7 @@ import io.github.foredayner.aibnf.content.GearItem;
 import io.github.foredayner.aibnf.content.GearKind;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -38,7 +38,7 @@ import java.util.WeakHashMap;
  */
 public final class SparkRenderer {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(AiBuildAssistantMod.MOD_ID, "textures/misc/spark.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "textures/misc/spark.png");
     private static final int MAX_EFFECTS = 160;
     private static final int MAX_DOTS_PER_FRAME = 9000;
     private static final double RANGE = 48;
@@ -96,14 +96,14 @@ public final class SparkRenderer {
     }
 
     private static double now(Minecraft client) {
-        return client.level.getGameTime() + client.getFrameTime();
+        return client.level.getGameTime() + client.getTimer().getGameTimeDeltaPartialTick(true);
     }
 
     private static Spark.Effects effectsOf(ItemStack stack) {
         if (stack.isEmpty() || !(stack.getItem() instanceof GearItem)) {
             return null;
         }
-        net.minecraft.nbt.CompoundTag data = stack.getTag();
+        net.minecraft.world.item.component.CustomData data = io.github.foredayner.aibnf.content.ItemData.raw(stack);
         if (data == null || !data.contains(GearEffects.KEY)) {
             return null;
         }
@@ -235,7 +235,7 @@ public final class SparkRenderer {
         Quaternionf rot = camera.rotation();
         Vector3f camRight = rot.transform(new Vector3f(1, 0, 0));
         Vector3f camUp = rot.transform(new Vector3f(0, 1, 0));
-        float delta = client.getFrameTime();
+        float delta = client.getTimer().getGameTimeDeltaPartialTick(true);
         double now = client.level.getGameTime() + delta;
         MultiBufferSource.BufferSource immediate = client.renderBuffers().bufferSource();
         RenderType layer = RenderType.entityTranslucentEmissive(TEXTURE);

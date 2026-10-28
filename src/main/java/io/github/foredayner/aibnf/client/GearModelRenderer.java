@@ -100,21 +100,21 @@ public final class GearModelRenderer {
     private static final float BOW_GRIP_Y = 0.69F;
 
     /** Decoded models by item data, so the gzip and JSON are read once per stack, not every frame. */
-    private static final Map<Integer, Map.Entry<WeakReference<net.minecraft.nbt.CompoundTag>, Model>> CACHE = new LinkedHashMap<>(64, 0.75f, true) {
+    private static final Map<Integer, Map.Entry<WeakReference<net.minecraft.world.item.component.CustomData>, Model>> CACHE = new LinkedHashMap<>(64, 0.75f, true) {
         @Override
-        protected boolean removeEldestEntry(Map.Entry<Integer, Map.Entry<WeakReference<net.minecraft.nbt.CompoundTag>, Model>> eldest) {
+        protected boolean removeEldestEntry(Map.Entry<Integer, Map.Entry<WeakReference<net.minecraft.world.item.component.CustomData>, Model>> eldest) {
             return size() > 64;
         }
     };
 
     /** The decoded model on a gear stack (cached), or null. */
     public static Model modelFor(ItemStack stack) {
-        net.minecraft.nbt.CompoundTag data = stack.getTag();
+        net.minecraft.world.item.component.CustomData data = io.github.foredayner.aibnf.content.ItemData.raw(stack);
         if (data == null) {
             return null;
         }
         int key = System.identityHashCode(data);
-        Map.Entry<WeakReference<net.minecraft.nbt.CompoundTag>, Model> hit = CACHE.get(key);
+        Map.Entry<WeakReference<net.minecraft.world.item.component.CustomData>, Model> hit = CACHE.get(key);
         if (hit != null && hit.getKey().get() == data) {
             return hit.getValue();
         }
@@ -190,7 +190,7 @@ public final class GearModelRenderer {
     private static TextureAtlasSprite spriteOf(String block) {
         String id = block.contains("[") ? block.substring(0, block.indexOf('[')) : block;
         ResourceLocation parsed = ResourceLocation.tryParse(id);
-        Block b = BuiltInRegistries.BLOCK.get(parsed == null ? new ResourceLocation("stone") : parsed);
+        Block b = BuiltInRegistries.BLOCK.get(parsed == null ? ResourceLocation.parse("stone") : parsed);
         BlockState state = b.defaultBlockState();
         return Minecraft.getInstance().getModelManager().getBlockModelShaper().getParticleIcon(state);
     }
@@ -245,7 +245,7 @@ public final class GearModelRenderer {
         matrices.popPose();
     }
 
-    private static final ResourceLocation WHITE = new ResourceLocation(AiBuildAssistantMod.MOD_ID, "textures/misc/white.png");
+    private static final ResourceLocation WHITE = ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "textures/misc/white.png");
 
     /**
      * The aura: two see-through, shining shells around every piece (a small and a wider one),
@@ -324,7 +324,7 @@ public final class GearModelRenderer {
         if (client.level == null) {
             return System.currentTimeMillis() / 1000.0;
         }
-        return (client.level.getGameTime() + client.getFrameTime()) / 20.0;
+        return (client.level.getGameTime() + client.getTimer().getGameTimeDeltaPartialTick(true)) / 20.0;
     }
 
     /** Apply one movement to the matrix; returns the light to use (glow = full brightness). */

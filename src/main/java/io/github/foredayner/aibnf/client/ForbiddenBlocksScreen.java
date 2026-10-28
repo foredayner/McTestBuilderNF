@@ -149,7 +149,7 @@ public class ForbiddenBlocksScreen extends Screen {
 
     private void clampScrollOffset() {
         int maxOffset = Math.max(0, this.blocks.size() - VISIBLE_ROWS);
-        this.scrollOffset = net.minecraft.util.Mth.clamp(this.scrollOffset, 0, maxOffset);
+        this.scrollOffset = Math.clamp(this.scrollOffset, 0, maxOffset);
     }
 
     private void finish() {
@@ -216,4 +216,7 @@ public class ForbiddenBlocksScreen extends Screen {
         return false;
     }
 
+    @Override
+    public void renderBackground(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
+    }
 }

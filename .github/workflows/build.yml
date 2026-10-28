@@ -2,7 +2,7 @@ name: build
 
 on:
   push:
-    branches-ignore: [ci-logs, ci-logs-neoforge, migrated-src]
+    branches-ignore: [ci-logs, ci-logs-neoforge, ci-logs-1.21.1, migrated-src]
   pull_request:
   workflow_dispatch:
 
@@ -10,15 +10,15 @@ permissions:
   contents: write
 
 jobs:
-  forge:
-    name: Forge 1.20.1 (build, tests, client screenshots)
+  build:
+    name: NeoForge 1.21.1 (build, tests, client screenshots)
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Build and unit tests
@@ -46,18 +46,18 @@ jobs:
           grep -q "\[smoketest\] done" run/smoke/logs/latest.log
 
       - name: Publish to the "latest" release
-        if: github.ref == 'refs/heads/main' && steps.gametest.outcome == 'success' && steps.smoke.outcome == 'success'
+        if: github.ref == 'refs/heads/neoforge-1.21.1' && steps.gametest.outcome == 'success' && steps.smoke.outcome == 'success'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: mc1.20.1-latest
-          name: AI Build Assistant NF for Minecraft 1.20.1 Forge / NeoForge (latest build)
+          tag_name: mc1.21.1-neoforge-latest
+          name: AI Build Assistant NF for Minecraft 1.21.1 NeoForge (latest build)
           prerelease: true
-          make_latest: true
+          make_latest: false
           body: |
-            Minecraft 1.20.1 Forge / NeoForge port of Minecraft-AI-Build-Assistant (original: Fyzugx-Lab, CC0),
+            Minecraft 1.21.1 NeoForge port of Minecraft-AI-Build-Assistant (original: Fyzugx-Lab, CC0),
             via the 1.21.4 Fabric version (foredayner/McTestBuilder).
             Built automatically from `${{ github.sha }}` after unit tests, in-game server tests and a client smoke test passed.
-            See PORT-1.20.1.md for what changed and how to install.
+            See PORT-1.21.1.md for what changed and how to install.
           files: |
             build/libs/AIBuildAssistantNF-*.jar
             !build/libs/*-sources.jar
@@ -76,36 +76,6 @@ jobs:
           cp build/libs/*.jar "$out/" 2>/dev/null || true
           echo "${GITHUB_SHA} ${GITHUB_REF_NAME} build=${{ steps.build.outcome }} gametest=${{ steps.gametest.outcome }} smoke=${{ steps.smoke.outcome }}" > "$out/RUN.txt"
           cd "$out"
-          git init -q && git checkout -q -b ci-logs && git add -A
+          git init -q && git checkout -q -b ci-logs-1.21.1 && git add -A
           git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "logs for ${GITHUB_SHA}"
-          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-logs
-
-  neoforge:
-    name: NeoForge 1.20.1 (build, game tests)
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-      - uses: gradle/actions/setup-gradle@v4
-
-      - name: Build and game tests on NeoForge
-        id: neo
-        run: |
-          chmod +x gradlew
-          set -o pipefail
-          ./gradlew build runGameTestServer -Pplatform=neoforge --stacktrace 2>&1 | tee neoforge.log
-
-      - name: Publish logs to the ci-logs-neoforge branch
-        if: always()
-        run: |
-          out=$(mktemp -d)
-          cp neoforge.log "$out/" 2>/dev/null || true
-          cp -r run/logs "$out/gametest-logs" 2>/dev/null || true
-          echo "${GITHUB_SHA} ${GITHUB_REF_NAME} neoforge=${{ steps.neo.outcome }}" > "$out/RUN.txt"
-          cd "$out"
-          git init -q && git checkout -q -b ci-logs-neoforge && git add -A
-          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "neoforge logs for ${GITHUB_SHA}"
-          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-logs-neoforge
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-logs-1.21.1

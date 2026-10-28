@@ -10,13 +10,11 @@ import io.github.foredayner.aibnf.network.AiNetworking;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,25 +24,24 @@ public class AiBuildAssistantMod {
     public static final String MOD_ID = "aibuildassistantnf";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public AiBuildAssistantMod() {
+    public AiBuildAssistantMod(IEventBus modBus, Dist dist) {
         LOGGER.info("Minecraft AI Build Assistant starting...");
-        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         AiBuilderConfig.load();
         io.github.foredayner.aibnf.content.AibContent.register(modBus);
         io.github.foredayner.aibnf.ai.build.HitEffects.register();
         BuildTaskQueue.register();
 
-        AiNetworking.registerPayloads();
+        AiNetworking.register(modBus);
 
         AiBuildCommand.register();
         AiApprovalCommands.register();
         ChatMessageHandler.registerChatFilter();
 
         // Blueprint papers (buildings): right-click the top of a block to build there.
-        MinecraftForge.EVENT_BUS.addListener(AiBuildAssistantMod::onUseBlock);
+        NeoForge.EVENT_BUS.addListener(AiBuildAssistantMod::onUseBlock);
 
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (dist == Dist.CLIENT) {
             io.github.foredayner.aibnf.client.AiBuildAssistantClient.init(modBus);
         }
     }

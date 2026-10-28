@@ -1,8 +1,8 @@
 package io.github.foredayner.aibnf.command;
 
 import io.github.foredayner.aibnf.ai.approval.BuildApproval;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.minecraft.network.chat.Component;
 
 import static net.minecraft.commands.Commands.literal;
@@ -13,7 +13,7 @@ public final class AiApprovalCommands {
     }
 
     public static void register() {
-        MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> {
+        NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> {
             var dispatcher = event.getDispatcher();
             dispatcher.register(
                 literal("ai-approve")

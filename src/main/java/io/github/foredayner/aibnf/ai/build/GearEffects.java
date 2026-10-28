@@ -73,7 +73,7 @@ public final class GearEffects {
         LAST_SWING.put(player.getUUID(), now);
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getViewVector(1.0F);
-        double reach = player.getEntityReach();
+        double reach = player.entityInteractionRange();
         net.minecraft.world.phys.EntityHitResult aimed = net.minecraft.world.entity.projectile.ProjectileUtil.getEntityHitResult(player, eye,
             eye.add(look.scale(reach)), player.getBoundingBox().expandTowards(look.scale(reach)).inflate(1.0),
             e -> e instanceof LivingEntity && !e.isSpectator() && e.isPickable(), reach * reach);
@@ -134,7 +134,7 @@ public final class GearEffects {
         AiNetworkPayloads.SparkS2CPayload payload = new AiNetworkPayloads.SparkS2CPayload("[" + spark.toJson() + "]",
             at.x, at.y, at.z, (float) dir.x, (float) dir.y, (float) dir.z, (float) scale);
         for (ServerPlayer p : to) {
-            if (p.serverLevel() == world && AiNetworking.canSend(p)) {
+            if (p.serverLevel() == world && AiNetworking.canSend(p, AiNetworkPayloads.SparkS2CPayload.ID)) {
                 AiNetworking.send(p, payload);
             }
         }

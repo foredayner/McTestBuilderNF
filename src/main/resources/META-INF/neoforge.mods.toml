@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[47,)"
+loaderVersion="[1,)"
 license="CC0-1.0 (original), MIT (port changes)"
 issueTrackerURL="https://github.com/foredayner/McTestBuilderNF/issues"
 
@@ -10,20 +10,23 @@ displayName="${mod_name}"
 authors="${mod_authors}"
 logoFile="assets/${mod_id}/icon.png"
 description='''
-AI-powered building for Minecraft 1.20.1 (Forge / NeoForge): an AI designs buildings and small objects.
+AI-powered building for Minecraft 1.21.1 (NeoForge): an AI designs buildings, small objects and equipment.
 Port of Minecraft-AI-Build-Assistant by Fyzugx-Lab (CC0).
 '''
 
+[[mixins]]
+config="${mod_id}.mixins.json"
+
 [[dependencies.${mod_id}]]
-modId="forge"
-mandatory=true
-versionRange="[47,)"
+modId="neoforge"
+type="required"
+versionRange="[21.1,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="minecraft"
-mandatory=true
-versionRange="[1.20.1,1.20.2)"
+type="required"
+versionRange="[1.21.1,1.21.2)"
 ordering="NONE"
 side="BOTH"

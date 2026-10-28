@@ -16,8 +16,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.client.resources.PlayerSkin;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 /**
  * Draws worn AI equipment (helmets, hats, armour, back items) on players, zombies, armour stands
@@ -40,13 +40,13 @@ public final class WearRenderer<T extends LivingEntity, M extends HumanoidModel<
     /** Adds the layer to every player skin and every entity renderer with a humanoid model. */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void addLayers(EntityRenderersEvent.AddLayers event) {
-        for (String skin : event.getSkins()) {
+        for (PlayerSkin.Model skin : event.getSkins()) {
             LivingEntityRenderer renderer = event.getSkin(skin);
             if (renderer != null) {
                 renderer.addLayer(new WearRenderer(renderer));
             }
         }
-        for (EntityType<?> type : ForgeRegistries.ENTITY_TYPES.getValues()) {
+        for (EntityType<?> type : event.getEntityTypes()) {
             EntityRenderer<?> renderer;
             try {
                 renderer = event.getRenderer((EntityType) type);

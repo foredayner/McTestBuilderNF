@@ -1,5 +1,6 @@
 package io.github.foredayner.aibnf.content;
 
+import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -32,7 +33,7 @@ public class GearWornItem extends GearToolItem implements Equipable {
     }
 
     @Override
-    public SoundEvent getEquipSound() {
-        return kind().base instanceof ArmorItem armor ? armor.getMaterial().getEquipSound() : SoundEvents.ARMOR_EQUIP_GENERIC;
+    public Holder<SoundEvent> getEquipSound() {
+        return kind().base instanceof ArmorItem armor ? armor.getMaterial().value().equipSound() : SoundEvents.ARMOR_EQUIP_GENERIC;
     }
 }

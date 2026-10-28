@@ -1,32 +1,22 @@
 package io.github.foredayner.aibnf.content;
 
-import com.google.common.collect.Multimap;
-import io.github.foredayner.aibnf.client.GearClientExtensions;
-import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.ToolAction;
+import net.neoforged.neoforge.common.ItemAbility;
 
 /**
- * An AI-modelled weapon, tool or worn piece. Its stats (damage, speed, mining, durability,
- * enchantability, armour) come from an iron vanilla item of its kind, and right-click and hit
- * behaviour is passed on to that item (an axe strips logs, a shovel makes paths, a hoe tills).
- * The look comes from the model stored on each stack (drawn by the client).
- *
- * <p>1.21 copies the vanilla item's data components onto this item; 1.20.1 has no components,
- * so each behaviour is handed on to the vanilla item here instead.
+ * An AI-modelled weapon, tool or worn piece. Damage, speed, mining and durability come from the
+ * iron vanilla item's data components (copied when registered); enchanting comes from item tags;
+ * right-click and hit behaviour is passed on to that item (an axe strips logs, a shovel makes
+ * paths, a hoe tills). The look comes from the model stored on each stack (drawn by the client).
  */
 public class GearToolItem extends Item implements GearItem {
 
@@ -46,8 +36,6 @@ public class GearToolItem extends Item implements GearItem {
         return new ItemStack(kind.base);
     }
 
-    // --- use and hit -------------------------------------------------------------------------
-
     @Override
     public InteractionResult useOn(UseOnContext context) {
         if (kind.worn()) {
@@ -66,6 +54,11 @@ public class GearToolItem extends Item implements GearItem {
     }
 
     @Override
+    public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        kind.base.postHurtEnemy(stack, target, attacker);
+    }
+
+    @Override
     public boolean mineBlock(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity miner) {
         return kind.base.mineBlock(stack, world, state, pos, miner);
     }
@@ -75,27 +68,9 @@ public class GearToolItem extends Item implements GearItem {
         return kind.base.canAttackBlock(state, world, pos, miner);
     }
 
-    // --- stats -------------------------------------------------------------------------------
-
     @Override
-    public float getDestroySpeed(ItemStack stack, BlockState state) {
-        return kind.base.getDestroySpeed(stack, state);
-    }
-
-    @Override
-    public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return kind.base.isCorrectToolForDrops(stack, state);
-    }
-
-    @Override
-    public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
-        return kind.base.canPerformAction(baseStack(), toolAction);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
-        return kind.base.getDefaultAttributeModifiers(slot);
+    public boolean canPerformAction(ItemStack stack, ItemAbility ability) {
+        return kind.base.canPerformAction(baseStack(), ability);
     }
 
     @Override
@@ -104,31 +79,13 @@ public class GearToolItem extends Item implements GearItem {
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return stack.getCount() == 1 && kind.base.isEnchantable(baseStack());
-    }
-
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return enchantment.category.canEnchant(kind.base);
-    }
-
-    @Override
     public boolean isValidRepairItem(ItemStack stack, ItemStack repair) {
         return kind.base.isValidRepairItem(baseStack(), repair);
     }
 
-    // --- worn kinds (see GearWornItem) ------------------------------------------------------
-
+    /** Worn kinds go on the head or chest (also when a dispenser or a mob equips them). */
     @Override
     public EquipmentSlot getEquipmentSlot(ItemStack stack) {
         return kind.worn() ? kind.slot : null;
-    }
-
-    // --- look (client) -----------------------------------------------------------------------
-
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(GearClientExtensions.INSTANCE);
     }
 }

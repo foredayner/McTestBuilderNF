@@ -30,15 +30,15 @@ public class AibArrowEntity extends AbstractArrow {
         super(type, world);
     }
 
-    public AibArrowEntity(Level world, LivingEntity owner, ItemStack bow) {
-        super(AibContent.ARROW, owner, world);
+    public AibArrowEntity(Level world, LivingEntity owner, ItemStack stack, ItemStack bow) {
+        super(AibContent.ARROW, owner, world, stack, bow);
         this.entityData.set(BOW, bow.copyWithCount(1));
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(BOW, ItemStack.EMPTY);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(BOW, ItemStack.EMPTY);
     }
 
     /** True once it has hit a block or an entity (its landing effect has played). */
@@ -52,7 +52,7 @@ public class AibArrowEntity extends AbstractArrow {
     }
 
     @Override
-    protected ItemStack getPickupItem() {
+    protected ItemStack getDefaultPickupItem() {
         return new ItemStack(Items.ARROW);
     }
 
@@ -86,7 +86,7 @@ public class AibArrowEntity extends AbstractArrow {
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         if (!bow().isEmpty()) {
-            nbt.put("aib_bow", bow().save(new CompoundTag()));
+            nbt.put("aib_bow", bow().save(level().registryAccess()));
         }
         nbt.putBoolean("aib_landed", landed);
     }
@@ -95,7 +95,7 @@ public class AibArrowEntity extends AbstractArrow {
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("aib_bow")) {
-            this.entityData.set(BOW, ItemStack.of(nbt.getCompound("aib_bow")));
+            ItemStack.parse(level().registryAccess(), nbt.get("aib_bow")).ifPresent(s -> this.entityData.set(BOW, s));
         }
         landed = nbt.getBoolean("aib_landed");
     }

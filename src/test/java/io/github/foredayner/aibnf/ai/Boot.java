@@ -16,8 +16,7 @@ public final class Boot {
             try {
                 Bootstrap.bootStrap();
             } catch (ExceptionInInitializerError | RuntimeException exception) {
-                // Forge's bootstrap ends by setting up its network code, which needs the full mod
-                // loader. Vanilla's registries (blocks, items, states) are all ready by then.
+                // Already started by the test loader, or a partial start: the registries are ready.
             }
             done = true;
         }

@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id 'net.neoforged.moddev.legacyforge' version '2.0.120'
+    id 'net.neoforged.moddev' version '2.0.120'
 }
 
 version = mod_version
@@ -11,18 +11,11 @@ base {
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
 }
 
-legacyForge {
-    // Built against Forge 47 (runs on Forge and NeoForge 1.20.1). CI also checks NeoForge with -Pplatform=neoforge.
-    if (findProperty('platform') == 'neoforge') {
-        enable {
-            neoForgeVersion = "${minecraft_version}-${neoforge_version}"
-        }
-    } else {
-        version = "${minecraft_version}-${forge_version}"
-    }
+neoForge {
+    version = neoforge_version
 
     parchment {
         minecraftVersion = parchment_minecraft_version
@@ -46,7 +39,7 @@ legacyForge {
         // Server-side game tests (in-world checks). Run with ./gradlew runGameTestServer
         gameTestServer {
             type = 'gameTestServer'
-            systemProperty 'forge.enabledGameTestNamespaces', mod_id
+            systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
         }
         configureEach {
             systemProperty 'forge.logging.markers', 'REGISTRIES'
@@ -60,13 +53,11 @@ legacyForge {
         }
     }
 
-    // Unit tests load Minecraft's registries (block names, block states) without starting a game.
-    addModdingDependenciesTo sourceSets.test
-}
-
-mixin {
-    add sourceSets.main, "${mod_id}.refmap.json"
-    config "${mod_id}.mixins.json"
+    // Unit tests run inside NeoForge's test loader, so Minecraft's registries are ready.
+    unitTest {
+        enable()
+        testedMod = mods."${mod_id}"
+    }
 }
 
 repositories {
@@ -74,8 +65,6 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-
     // Groovy runs the AI's build scripts. Bundled inside the mod jar (Jar-in-Jar).
     jarJar(implementation("org.codehaus.groovy:groovy")) {
         version { strictly "[${groovy_version},3.1)"; prefer groovy_version }
@@ -83,7 +72,7 @@ dependencies {
     jarJar(implementation("org.codehaus.groovy:groovy-json")) {
         version { strictly "[${groovy_version},3.1)"; prefer groovy_version }
     }
-    // Forge 1.20.1 does not put plain libraries on the game's classpath in dev runs by itself.
+    // Plain libraries are not on the game's class path in dev runs by themselves.
     additionalRuntimeClasspath "org.codehaus.groovy:groovy:${groovy_version}"
     additionalRuntimeClasspath "org.codehaus.groovy:groovy-json:${groovy_version}"
 
@@ -95,32 +84,22 @@ dependencies {
 tasks.named('processResources', ProcessResources).configure {
     def props = [
         mod_id: mod_id, mod_name: mod_name, mod_version: mod_version, mod_authors: mod_authors,
-        minecraft_version: minecraft_version, forge_version: forge_version
+        minecraft_version: minecraft_version, neoforge_version: neoforge_version
     ]
     inputs.properties props
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+    filesMatching(['META-INF/neoforge.mods.toml', 'pack.mcmeta']) {
         expand props
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.release = 17
+    options.release = 21
     options.compilerArgs += ['-Xmaxerrs', '3000']
 }
 
 jar {
     from('LICENSE') { rename { "${it}_AIBuildAssistantNF" } }
-    manifest {
-        attributes(
-            'Specification-Title': mod_id,
-            'Specification-Vendor': mod_authors,
-            'Specification-Version': '1',
-            'Implementation-Title': project.name,
-            'Implementation-Version': project.version,
-            'MixinConfigs': "${mod_id}.mixins.json"
-        )
-    }
 }
 
 test {

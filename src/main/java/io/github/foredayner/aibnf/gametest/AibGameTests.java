@@ -3,8 +3,8 @@ package io.github.foredayner.aibnf.gametest;
 import io.github.foredayner.aibnf.ai.build.BuildPlan;
 import io.github.foredayner.aibnf.ai.build.BuildRecord;
 import io.github.foredayner.aibnf.ai.build.UndoService;
-import net.minecraftforge.gametest.GameTestHolder;
-import net.minecraftforge.gametest.PrefixGameTestTemplate;
+import net.neoforged.neoforge.gametest.GameTestHolder;
+import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
@@ -30,31 +30,6 @@ public class AibGameTests {
     /** An empty 16 x 8 x 16 area (data/aibuildassistantnf/structures/empty.nbt). */
     private static final String EMPTY_STRUCTURE = "empty";
 
-    /**
-     * A creative test player that joins the server like a real one. Vanilla 1.20.1's own mock
-     * player has no network channel, which Forge's join code needs, so it gets an in-memory one.
-     */
-    static ServerPlayer mockPlayer(GameTestHelper context) {
-        ServerLevel level = context.getLevel();
-        ServerPlayer player = new ServerPlayer(level.getServer(), level,
-            new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(), "test-mock-player")) {
-            @Override
-            public boolean isSpectator() {
-                return false;
-            }
-
-            @Override
-            public boolean isCreative() {
-                return true;
-            }
-        };
-        net.minecraft.network.Connection connection = new net.minecraft.network.Connection(
-            net.minecraft.network.protocol.PacketFlow.SERVERBOUND);
-        new io.netty.channel.embedded.EmbeddedChannel(connection);
-        level.getServer().getPlayerList().placeNewPlayer(connection, player);
-        return player;
-    }
-
     private static void check(boolean ok, String message) {
         if (!ok) {
             throw new GameTestAssertException(message);
@@ -62,7 +37,7 @@ public class AibGameTests {
     }
 
     private static ServerPlayer opPlayer(GameTestHelper context, BlockPos at, float yaw) {
-        ServerPlayer player = mockPlayer(context);
+        ServerPlayer player = context.makeMockServerPlayerInLevel();
         // The GameTest server gives new operators level 0; set level 4 directly.
         player.getServer().getPlayerList().getOps().add(
             new net.minecraft.server.players.ServerOpListEntry(player.getGameProfile(), 4, false));
@@ -229,7 +204,7 @@ public class AibGameTests {
         BuildPlan model = io.github.foredayner.aibnf.ai.build.GearItems.modelOf(stack);
         check(model != null && model.parts.size() == sword.parts.size(), "the item carries the whole model");
         check(stack.getMaxDamage() == new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_SWORD).getMaxDamage(), "iron sword durability");
-        check(!stack.getAttributeModifiers(net.minecraft.world.entity.EquipmentSlot.MAINHAND).isEmpty(), "it has attack damage");
+        check(stack.has(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS), "it has attack damage");
         check(stack.is(net.minecraft.tags.ItemTags.SWORDS), "it counts as a sword (enchantments)");
         check(stack.getMaxStackSize() == 1, "does not stack");
         // Worn equipment: the examples stay on the head / torso; a helmet is a head item with iron armour.
@@ -260,9 +235,9 @@ public class AibGameTests {
         helm.gear = "helmet";
         net.minecraft.world.item.ItemStack helmStack = io.github.foredayner.aibnf.ai.build.GearItems.stackFor(helm);
         check(helmStack.getEquipmentSlot() == net.minecraft.world.entity.EquipmentSlot.HEAD, "a helmet goes on the head");
-        check(net.minecraft.world.item.enchantment.Enchantments.ALL_DAMAGE_PROTECTION.canEnchant(helmStack),
-            "takes armour enchantments");
-        check(!helmStack.getAttributeModifiers(net.minecraft.world.entity.EquipmentSlot.HEAD).isEmpty(), "it gives armour");
+        check(helmStack.is(net.minecraft.tags.ItemTags.HEAD_ARMOR_ENCHANTABLE), "takes head armour enchantments");
+        var modifiers = helmStack.get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS);
+        check(modifiers != null && !modifiers.modifiers().isEmpty(), "it gives armour");
 
         // Effects and movement: recorded, carried by the item, and dropped when the order did not ask.
         BuildPlan fx = Demo.plan(world, origin, player, """
@@ -356,17 +331,15 @@ public class AibGameTests {
         record.gear = "bow";
         net.minecraft.world.item.ItemStack bow = io.github.foredayner.aibnf.ai.build.GearItems.stackFor(record);
         check(bow.getItem() instanceof net.minecraft.world.item.BowItem, "it is a bow");
-        check(net.minecraft.world.item.enchantment.Enchantments.POWER_ARROWS.canEnchant(bow), "takes bow enchantments");
-        // 1.20.1: the bow turns the arrow vanilla made into its own (Forge's customArrow hook).
-        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, bow);
+        check(bow.is(net.minecraft.tags.ItemTags.BOW_ENCHANTABLE), "takes bow enchantments");
         var gearBow = (io.github.foredayner.aibnf.content.GearBowItem) bow.getItem();
-        var arrow = gearBow.customArrow(((net.minecraft.world.item.ArrowItem) net.minecraft.world.item.Items.ARROW)
-            .createArrow(world, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ARROW), player));
+        var arrow = gearBow.createProjectile(world, player, bow,
+            new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ARROW), false);
         check(arrow instanceof io.github.foredayner.aibnf.content.AibArrowEntity, "plain arrows become AI arrows");
         io.github.foredayner.aibnf.content.AibArrowEntity aib = (io.github.foredayner.aibnf.content.AibArrowEntity) arrow;
         check(io.github.foredayner.aibnf.ai.build.GearItems.modelOf(aib.bow()) != null, "the arrow carries the bow's model");
-        var tipped = gearBow.customArrow(((net.minecraft.world.item.ArrowItem) net.minecraft.world.item.Items.SPECTRAL_ARROW)
-            .createArrow(world, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SPECTRAL_ARROW), player));
+        var tipped = gearBow.createProjectile(world, player, bow,
+            new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SPECTRAL_ARROW), false);
         check(!(tipped instanceof io.github.foredayner.aibnf.content.AibArrowEntity), "other arrows stay vanilla");
         aib.moveTo(origin.getX() + 0.5, origin.getY() + 2, origin.getZ() + 0.5, 0, 0);
         aib.setDeltaMovement(0, -1, 0.3);
@@ -484,7 +457,7 @@ public class AibGameTests {
 
     @GameTest(template = EMPTY_STRUCTURE)
     public static void onlyOperatorsCanUseTheWorkshop(GameTestHelper context) {
-        ServerPlayer guest = mockPlayer(context);
+        ServerPlayer guest = context.makeMockServerPlayerInLevel();
         check(!io.github.foredayner.aibnf.network.AiNetworking.allowed(guest), "a non-operator is turned away");
         ServerPlayer op = opPlayer(context, context.absolutePos(new BlockPos(1, 1, 1)), 0f);
         check(io.github.foredayner.aibnf.network.AiNetworking.allowed(op), "an operator may use it");
@@ -546,7 +519,7 @@ public class AibGameTests {
         }
         check(!item.isEmpty() && item.is(io.github.foredayner.aibnf.content.AibContent.OBJECT_ITEM), "an object comes as an object item");
         check(io.github.foredayner.aibnf.ai.build.BlueprintStore.idOf(item) == null, "not a blueprint paper");
-        var data = item.getTag();
+        var data = io.github.foredayner.aibnf.content.ItemData.get(item);
         check(data.getIntArray("aib_icon").length == 256 && data.getIntArray("aib_icon")[200] == 0xFFCC2222, "the icon picture rides on the item");
 
         // The mock player is always in creative: the item is kept (survival takes one, like blocks).

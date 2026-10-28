@@ -29,8 +29,8 @@ import net.minecraft.world.level.LevelSettings;
 import net.minecraft.world.level.WorldDataConfiguration;
 import net.minecraft.world.level.levelgen.WorldOptions;
 import net.minecraft.world.level.levelgen.presets.WorldPresets;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 /**
  * CI only (run with -Daib.smoketest=true): opens a flat creative world, hands the player AI
@@ -50,11 +50,7 @@ public final class SmokeTest {
 
     public static void registerIfEnabled() {
         if (Boolean.getBoolean("aib.smoketest")) {
-            MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
-                if (event.phase == TickEvent.Phase.END) {
-                    tick(Minecraft.getInstance());
-                }
-            });
+            NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> tick(Minecraft.getInstance()));
         }
     }
 
@@ -123,7 +119,7 @@ public final class SmokeTest {
         settings.gameRules().getRule(GameRules.RULE_WEATHER_CYCLE).set(false, null);
         mc.createWorldOpenFlows().createFreshLevel("aib-smoketest", settings, new WorldOptions(1234L, false, false),
             registries -> registries.registryOrThrow(Registries.WORLD_PRESET).getHolderOrThrow(WorldPresets.FLAT).value()
-                .createWorldDimensions());
+                .createWorldDimensions(), null);
     }
 
     private static BuildRecord gear(ServerLevel world, BlockPos at, ServerPlayer player, String script, String kind) {

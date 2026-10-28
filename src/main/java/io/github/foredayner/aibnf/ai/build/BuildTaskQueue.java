@@ -1,8 +1,8 @@
 package io.github.foredayner.aibnf.ai.build;
 
 import io.github.foredayner.aibnf.config.AiBuilderConfig;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.ArrayDeque;
@@ -34,11 +34,9 @@ public final class BuildTaskQueue {
     }
 
     public static void register() {
-        MinecraftForge.EVENT_BUS.addListener((TickEvent.ServerTickEvent event) -> {
-            if (event.phase == TickEvent.Phase.END) {
-                server = event.getServer();
-                tick();
-            }
+        NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post event) -> {
+            server = event.getServer();
+            tick();
         });
     }
 

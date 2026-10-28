@@ -2,15 +2,20 @@ package io.github.foredayner.aibnf.client;
 
 import io.github.foredayner.aibnf.client.network.AiClientNetworking;
 import io.github.foredayner.aibnf.config.AiBuilderConfig;
+import io.github.foredayner.aibnf.content.AibContent;
+import io.github.foredayner.aibnf.content.GearKind;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.lwjgl.glfw.GLFW;
 
 /** The player's game: keys, screens, renderers and the messages the server sends. */
@@ -25,13 +30,20 @@ public class AiBuildAssistantClient {
 
         modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
             // Solid object hitboxes are invisible; object items draw their own picture.
-            event.registerEntityRenderer(io.github.foredayner.aibnf.content.AibContent.HITBOX,
-                net.minecraft.client.renderer.entity.NoopRenderer<io.github.foredayner.aibnf.content.SolidHitboxEntity>::new);
-            event.registerEntityRenderer(io.github.foredayner.aibnf.content.AibContent.ARROW, AibArrowRenderer::new);
+            event.registerEntityRenderer(AibContent.HITBOX, net.minecraft.client.renderer.entity.NoopRenderer::new);
+            event.registerEntityRenderer(AibContent.ARROW, AibArrowRenderer::new);
         });
         modBus.addListener((EntityRenderersEvent.AddLayers event) -> WearRenderer.addLayers(event));
-        modBus.addListener((RegisterGuiOverlaysEvent event) -> event.registerAboveAll("object_breaking",
-            (gui, graphics, partialTick, width, height) -> ObjectBreaking.renderHud(graphics)));
+        // AI gear and object items are drawn by the mod's item renderers.
+        modBus.addListener((RegisterClientExtensionsEvent event) -> {
+            event.registerItem(ObjectIconRenderer.EXTENSIONS, AibContent.OBJECT_ITEM);
+            for (GearKind kind : GearKind.values()) {
+                event.registerItem(GearClientExtensions.INSTANCE, AibContent.GEAR.get(kind));
+            }
+        });
+        modBus.addListener((RegisterGuiLayersEvent event) -> event.registerAboveAll(
+            ResourceLocation.fromNamespaceAndPath(io.github.foredayner.aibnf.AiBuildAssistantMod.MOD_ID, "object_breaking"),
+            (graphics, deltaTracker) -> ObjectBreaking.renderHud(graphics)));
 
         OPEN_AI_UI_KEY = new KeyMapping(
             "key.aibuildassistantnf.open_ai_ui",
@@ -50,10 +62,7 @@ public class AiBuildAssistantClient {
             event.register(REMOVE_OBJECT_KEY);
         });
 
-        MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
-            if (event.phase != TickEvent.Phase.END) {
-                return;
-            }
+        NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> {
             Minecraft client = Minecraft.getInstance();
             while (OPEN_AI_UI_KEY.consumeClick()) {
                 if (!isOperator(client)) {
@@ -71,7 +80,7 @@ public class AiBuildAssistantClient {
             ObjectBreaking.tick(client);
             SparkRenderer.tick(client);
         });
-        MinecraftForge.EVENT_BUS.addListener((net.minecraftforge.client.event.RenderLevelStageEvent event) -> SparkRenderer.render(event));
+        NeoForge.EVENT_BUS.addListener((RenderLevelStageEvent event) -> SparkRenderer.render(event));
     }
 
     private static KeyMapping REMOVE_OBJECT_KEY;

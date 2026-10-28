@@ -17,13 +17,13 @@ import net.minecraft.world.item.ItemStack;
  */
 public final class ObjectIconRenderer {
 
-    private static final ResourceLocation WHITE = new ResourceLocation(AiBuildAssistantMod.MOD_ID, "textures/misc/white.png");
+    private static final ResourceLocation WHITE = ResourceLocation.fromNamespaceAndPath(AiBuildAssistantMod.MOD_ID, "textures/misc/white.png");
     private static final int N = BuildPreview.ICON;
     private static final int[] FALLBACK = fallback();
 
     /** Hooks this renderer up to the object item (Forge's item renderer extension). */
-    public static final net.minecraftforge.client.extensions.common.IClientItemExtensions EXTENSIONS =
-        new net.minecraftforge.client.extensions.common.IClientItemExtensions() {
+    public static final net.neoforged.neoforge.client.extensions.common.IClientItemExtensions EXTENSIONS =
+        new net.neoforged.neoforge.client.extensions.common.IClientItemExtensions() {
             private ItemRenderer renderer;
 
             @Override
